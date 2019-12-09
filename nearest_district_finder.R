@@ -7,6 +7,9 @@ header_data = read.csv("집계코드_위도_경도_주소.csv", fileEncoding = "
 options("scipen" = 100)
 header = header_data[,2]
 
+department = read.csv("점포이름_위도_경도_주소.csv", fileEncoding = "CP949", encoding = "euc-kr")
+
+
 # sum(data == 0)
 # my_mat = matrix(rep(0,length(data)*5), nrow=5)
 my_mat = NULL
@@ -23,5 +26,43 @@ for (dept in 1:length(data)){
 
 
 
-header_data[header_data[,2] == my_mat[1,1],3]
-header_data[header_data[,2] == my_mat[1,1],4]
+x = header_data[header_data[,2] == my_mat[1,1],3]
+y = header_data[header_data[,2] == my_mat[1,1],4]
+
+
+
+library(rgdal)
+library(ggplot2)
+
+my_spdf <- readOGR( 
+  dsn= paste0("../map/") , 
+  layer="seoul",
+  verbose=FALSE
+)
+
+target = header_data[header_data[,2] == my_mat[1,1], 2]
+my_coord = my_spdf[,as.integer(my_spdf@data[, "TOT_REG_CD"]) == my_mat[1,1]]
+plot(my_coord, col="#f2f2f2", bg="skyblue", border=0 )
+
+# 'fortify' the data to get a dataframe format required by ggplot2
+# library(broom)
+# spdf_fortified <- tidy(my_spdf, region = "NAME")
+
+plot(my_spdf, col="#f2f2f2", bg="skyblue", border=0 )
+
+
+
+# Plot it
+fig = ggplot() +
+  geom_polygon(data = my_spdf, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
+  theme_void() + geom_point(aes(x,y))
+
+fig 
+
+ggplot() +
+  geom_polygon(data = my_spdf, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
+  theme_void()
+
+
+
+
