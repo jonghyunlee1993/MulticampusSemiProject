@@ -13,8 +13,6 @@ head(header_data)
 department = read.csv("점포이름_위도_경도_주소.csv", fileEncoding = "CP949", encoding = "euc-kr")
 head(department)
 
-# sum(data == 0)
-# my_mat = matrix(rep(0,length(data)*5), nrow=5)
 my_mat = NULL
 
 for (dept in 1:length(data)){
@@ -24,11 +22,7 @@ for (dept in 1:length(data)){
   idx = order(dat)
   
   my_mat = cbind(my_mat, head(header[idx]), head(sort(dat)))
-  # print(my_mat[,dept])
 }
-
-# x = department[header_data[,2] == my_mat[1,1], 3]
-# y = header_data[header_data[,2] == my_mat[1,1],4]
 
 library(rgdal)
 library(ggplot2)
@@ -53,6 +47,17 @@ plot(converted, axes = T)
 # target = header_data[header_data[,2] == my_mat[1,1], 2]
 # my_coord = my_spdf[,as.integer(my_spdf@data[, "TOT_REG_CD"]) == my_mat[1,1]]
 
+library(dplyr)
+for (i in department$name) {
+  if (substr(i, 1, 2) == "신세") {
+    
+  }
+}
+
+department = department %>% mutate(comp = ifelse(substr(name, 1, 2) == "신세", 1, 
+                                    ifelse(substr(name, 1, 2) == "현대", 2, 3)))
+
+
 library(rgdal)
 
 # Plot it
@@ -64,7 +69,7 @@ fig
 
 ggplot() +
   geom_polygon(data = converted, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
-  theme_void() + geom_point(data = department, aes(lon, lat))
+  theme_void() + geom_point(data = department, aes(lon, lat, colour = factor(comp)))
 
 # depart = department[1,]
 # 
