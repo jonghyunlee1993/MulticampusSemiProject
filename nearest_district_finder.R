@@ -24,10 +24,13 @@ for (dept in 1:length(data)){
   print(my_mat[,dept])
 }
 
-
-
-x = header_data[header_data[,2] == my_mat[1,1],3]
-y = header_data[header_data[,2] == my_mat[1,1],4]
+x = department$lon[1]
+y = department$lat[1]
+# 
+# 
+# 
+# x = department[header_data[,2] == my_mat[1,1], 3]
+# y = header_data[header_data[,2] == my_mat[1,1],4]
 
 
 
@@ -48,9 +51,12 @@ plot(my_coord, col="#f2f2f2", bg="skyblue", border=0 )
 # library(broom)
 # spdf_fortified <- tidy(my_spdf, region = "NAME")
 
+
 plot(my_spdf, col="#f2f2f2", bg="skyblue", border=0 )
 
-
+library(rgdal)
+proj4string(my_spdf) <- CRS("+proj=longlat +ellps=WGS84")
+shapefile <- spTransform(my_spdf, CRS("+proj=longlat +datum=WGS84")) #change CRS
 
 # Plot it
 fig = ggplot() +
@@ -63,6 +69,13 @@ ggplot() +
   geom_polygon(data = my_spdf, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
   theme_void()
 
+depart = department[1,]
+
+ggplot() +
+  geom_polygon(data = temp, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
+  geom_point(data = depart, aes(x = lon, y = lat))
 
 
+ggplot()+
+  geom_point(data = department, aes(lon, lat))
 
