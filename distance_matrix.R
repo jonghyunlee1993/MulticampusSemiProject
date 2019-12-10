@@ -26,5 +26,6 @@ for (depart in 1:length(department$X)){
   }
 }
 
-res = as.data.frame(data)
+temp = t(data)
+res = as.data.frame(temp)
 write.csv(res, "distance_matrix.csv")
