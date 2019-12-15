@@ -20,9 +20,14 @@ for (dept in 1:length(data)){
   dat[dat == 0] = NA
   
   idx = order(dat)
-  
+
   my_mat = cbind(my_mat, head(header[idx]), head(sort(dat)))
 }
+
+colnames(my_mat) = rep(as.character(department$name), each = 2)
+View(my_mat)
+
+write.csv(my_mat, "department_nearest_sector.csv")
 
 library(rgdal)
 library(ggplot2)
