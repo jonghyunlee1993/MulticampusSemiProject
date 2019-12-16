@@ -3,10 +3,9 @@ options("scipen" = 100)
 
 # load 집계구 
 setwd("~/GitRepo/Multicampus_semi/address/")
-loc = read.csv("department_nearest_sector.csv")
-# 단순 최단 거리 기준
-temp_loc = unlist(loc[1, seq(2,ncol(loc), 2)])
+loc = read.csv("proced_department.csv")
 
+codes = loc$code
 
 # load local people dataset
 setwd("/Volumes/MnD_Lee_SSD/Local_people_dataset")
@@ -27,11 +26,23 @@ default_names = c("시간대", "집계구", "총생활인구")
 male_names = paste0("남", seq(10, 65, 5))
 female_names = paste0("여", seq(10, 65, 5))
 
-# 추후 for loop 로 변경
-fname = paste0("LOCAL_PEOPLE_", format(weekend[1], "%Y%m%d"), ".csv")
-data = read.csv(fname, fileEncoding = "euc-kr")
-parse_data = data[, c(2, 4, 5, 7:18, 21:32)]
-names(parse_data) = c(default_names, male_names, female_names)
 
-open_hours = parse_data[parse_data$시간대 %in% c(10:22) & parse_data$집계구 %in% temp_loc, ]
+res = NULL
+
+for (my_date in 1:length(weekend)){
+  cat(my_date, "\n")
+  fname = paste0("LOCAL_PEOPLE_", format(weekend[my_date], "%Y%m%d"), ".csv")
+  
+  try({data = read.csv(fname, fileEncoding = "UTF-8")})
+
+  parse_data = data[, c(2, 4, 5, 7:18, 21:32)]
+  names(parse_data) = c(default_names, male_names, female_names)
+  
+  open_hours = parse_data[parse_data$시간대 %in% c(10:22) & parse_data$집계구 %in% codes, ]
+  # View(open_hours)
+  # barplot(open_hours[open_hours$집계구 == codes[14], 3])
+  date_res = cbind(date = rep(format(weekend[my_date], "%Y%m%d"), nrow(open_hours)), open_hours)
+  res = rbind(res, date_res)
+}
+
 
