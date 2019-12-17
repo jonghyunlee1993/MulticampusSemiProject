@@ -26,7 +26,7 @@ default_names = c("시간대", "집계구", "총생활인구")
 male_names = paste0("남", seq(10, 65, 5))
 female_names = paste0("여", seq(10, 65, 5))
 
-
+setwd("/Volumes/Transcend/Local_people_dataset/")
 res = NULL
 
 for (my_date in 1:length(weekend)){
@@ -45,4 +45,4 @@ for (my_date in 1:length(weekend)){
   res = rbind(res, date_res)
 }
 
-
+save(res, file = "~/GitRepo/Multicampus_semi/local_people/weekend.Rdata")
