@@ -31,20 +31,26 @@ female_names = paste0("여", seq(10, 65, 5))
 setwd("/Volumes/Transcend/Local_people_dataset/")
 res = NULL
 
-for (my_date in 1:length(weekday)){
-  cat(my_date, "\n")
-  fname = paste0("LOCAL_PEOPLE_", format(weekday[my_date], "%Y%m%d"), ".csv")
+residence_hour = function(fname, res){
+  data = read.csv(fname, fileEncoding = "UTF-8")
   
-  try({data = read.csv(fname, fileEncoding = "UTF-8")})
-
   parse_data = data[, c(2, 4, 5, 7:18, 21:32)]
   names(parse_data) = c(default_names, male_names, female_names)
   
   stay_hours = parse_data[parse_data$시간대 %in% c(10:22) & parse_data$집계구 %in% codes, ]
-  # View(open_hours)
-  # barplot(open_hours[open_hours$집계구 == codes[14], 3])
+  
   date_res = cbind(date = rep(format(weekday[my_date], "%Y%m%d"), nrow(stay_hours)), stay_hours)
   res = rbind(res, date_res)
+  
+  return(res)
 }
 
-save(res, file = "~/GitRepo/Multicampus_semi/local_people/weekday.Rdata")
+for (my_date in 1:length(weekday)){
+  cat(my_date, "/", length(weekday), "\n")
+  fname = paste0("LOCAL_PEOPLE_", format(weekday[my_date], "%Y%m%d"), ".csv")
+  
+  try({res = residence_hour(fname, res)})
+}
+
+save(res, file = "weekday.Rdata")
+# save(res, file = "~/GitRepo/Multicampus_semi/local_people/weekday.Rdata")
