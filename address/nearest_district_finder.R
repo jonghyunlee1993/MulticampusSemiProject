@@ -17,6 +17,7 @@ my_mat = NULL
 
 for (dept in 1:length(data)){
   dat = data[,dept]
+<<<<<<< HEAD
   dat[dat == 0] = NA
   
   idx = order(dat)
@@ -24,6 +25,20 @@ for (dept in 1:length(data)){
   my_mat = cbind(my_mat, head(header[idx]), head(sort(dat)))
 }
 
+=======
+  # dat[dat == 0] = NA
+  
+  idx = order(dat)
+
+  my_mat = cbind(my_mat, head(header[idx]), head(sort(dat), 20))
+}
+
+colnames(my_mat) = rep(as.character(department$name), each = 2)
+View(my_mat)
+
+write.csv(my_mat, "department_nearest_sector.csv")
+
+>>>>>>> 04c984f6692c6eafda190f1501963ce2f94ad9da
 library(rgdal)
 library(ggplot2)
 
@@ -54,12 +69,21 @@ for (i in department$name) {
   }
 }
 
+<<<<<<< HEAD
+=======
+department$str_comp = substr(department$name, 1, 2)
+department$str_comp = as.factor(department$str_comp)
+
+>>>>>>> 04c984f6692c6eafda190f1501963ce2f94ad9da
 department = department %>% mutate(comp = ifelse(substr(name, 1, 2) == "신세", 1, 
                                     ifelse(substr(name, 1, 2) == "현대", 2, 3)))
 
 
+<<<<<<< HEAD
 library(rgdal)
 
+=======
+>>>>>>> 04c984f6692c6eafda190f1501963ce2f94ad9da
 # Plot it
 fig = ggplot() +
   geom_polygon(data = my_spdf, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
@@ -69,7 +93,11 @@ fig
 
 ggplot() +
   geom_polygon(data = converted, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
+<<<<<<< HEAD
   theme_void() + geom_point(data = department, aes(lon, lat, colour = factor(comp)))
+=======
+  theme_void() + geom_point(data = department, aes(lon, lat, colour = str_comp))
+>>>>>>> 04c984f6692c6eafda190f1501963ce2f94ad9da
 
 # depart = department[1,]
 # 
@@ -81,4 +109,55 @@ ggplot() +
 # ggplot()+
 #   geom_point(data = department, aes(lon, lat))
 
+<<<<<<< HEAD
+=======
+# data_result = converted@data
+# library(broom)
+# shp_result = tidy(converted)
+# 
+# Name = cbind(id = 1:19153, data_result)
+# length(unique(shp_result$order))
+
+suppressPackageStartupMessages({
+  library(ggplot2)
+  library(ggthemes)
+  library(extrafont)
+})
+
+library(broom)
+temp = tidy(converted)
+cname = aggregate(cbind(long, lat) ~ id, data = temp, FUN = mean)
+
+
+
+font_import()
+theme_set(theme_gray(base_family='AppleMyungjo'))
+
+for (depart in 1:nrow(department)){
+  target = header_data[header_data[,2] %in% my_mat[, (depart * 2 - 1)], 2]
+  # target_coord = my_spdf[as.integer(my_spdf@data[, "TOT_REG_CD"]) == target, ]
+  # plot(target_coord)
+  
+  target_coord = subset(converted, TOT_REG_CD %in% target)
+  target_df = broom::tidy(target_coord)
+  cname = aggregate(cbind(long, lat) ~ id, data = target_df, FUN = mean)
+  label_data = cbind(cname, target_coord@data)
+  
+  my_plot = ggplot() +
+    geom_polygon(data = target_coord, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
+    theme_gray(base_family='AppleMyungjo') + 
+    geom_point(data = department[depart,], aes(lon, lat)) +
+    geom_text(data = label_data, aes(x = long, y = lat, label = TOT_REG_CD), 
+              check_overlap = F, angle = 45) +
+    ggtitle(department$name[depart])
+  
+  print(my_plot)
+  
+  invisible(readline(prompt="Press [enter] to continue"))
+}
+
+
+
+
+>>>>>>> 04c984f6692c6eafda190f1501963ce2f94ad9da
 
