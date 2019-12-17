@@ -6,9 +6,6 @@ library(dplyr)
 dust = read_excel("c:/Multicampus_semi/dust/일별평균대기오염도_2018.xlsx")
 dust
 
-head(dust)
-tail(dust)
-
 date = dust$측정일시
 unique_date = unique(date)
 
@@ -16,10 +13,16 @@ unique_date = unique(date)
 unique_date = unlist(unique_date)
 
 dust_avg = function(data, num){
-  dust = na.omit(unlist(data[num]))
-  dust_avg = mean(dust, trim = 10)
-  return(dust_avg)
+  dust = unlist(data[!is.na(data[num]), num])
+  dust_val = mean(dust, trim = 10)
+  return(dust_val)
 }
+
+result = NULL
+one_day = NULL
+find_dust_grade = NA
+hyper_dust_grade = NA
+
 
 for (my_date in unique_date){
   temp = dust[dust$측정일시 == my_date, ]
@@ -72,11 +75,10 @@ for (my_date in unique_date){
   }else {
     IsDustyDay = 0
   }
+  
+  one_day = data.frame(date = my_date, IsDustyDay = IsDustyDay)
+  result = rbind(result, one_day)
 }
 
-result = data.frame(my_date, IsDustyDay)
+write.csv(result, file = "c:/Multicampus_semi/dust/dust_grade_2018.csv")
 
-
-data <- data.frame(cbind(my_date, IsDustyDay))
-data
-write.csv(data, file = "dust_grade_2018.csv")
