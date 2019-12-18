@@ -5,7 +5,7 @@ options("scipen" = 100)
 setwd("~/GitRepo/Multicampus_semi/address/")
 loc = read.csv("proced_department.csv")
 
-codes = loc$code
+codes = unique(loc$code)
 
 # load local people dataset
 # setwd("/Volumes/MnD_Lee_SSD/Local_people_dataset")
