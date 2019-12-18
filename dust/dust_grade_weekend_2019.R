@@ -1,16 +1,18 @@
-# 2018 Weekend dust
+# 2019 Weekend dust
 rm(list = ls())
 #install.packages("readxl")
-library(readxl)
 library(dplyr)
-dust = read_excel("c:/Multicampus_semi/dust/일별평균대기오염도_2019.xlsx")
+# dust = read_excel("c:/Multicampus_semi/dust/일별평균대기오염도_2019.xlsx")
+dust = read.csv("~/GitRepo/Multicampus_semi/dust/서울시 일별 평균 대기오염도 정보_2019.csv")
 dust
 
 date = dust$측정일시
 unique_date = unique(date)
 unique_date2 = as.Date(as.character(unique_date), format = "%Y%m%d")
+# unique_date2 = unique_date2[unique_date2 >= as.Date("20190101", format="%Y%m%d")]
 dow = weekdays(unique_date2)
-weekend = unique_date[dow %in% c("토요일", "일요일")]
+# weekend = unique_date[dow %in% c("토요일", "일요일")]
+weekend = unique_date[dow %in% c("Saturday", "Sunday")]
 
 dust_avg = function(data, num){
   dust = unlist(data[!is.na(data[num]), num])
@@ -20,14 +22,14 @@ dust_avg = function(data, num){
 
 result = NULL
 one_day = NULL
-find_dust_grade = NA
+fine_dust_grade = NA
 hyper_dust_grade = NA
 
 for (my_date in weekend){
   temp = dust[dust$측정일시 == my_date, ]
   
-  fine_dust_avg = dust_avg(temp, 3)
-  hyper_dust_avg = dust_avg(temp, 4)
+  fine_dust_avg = dust_avg(temp, 7)
+  hyper_dust_avg = dust_avg(temp, 8)
   
   # calculate find dust grade by WHO criteria
   if (fine_dust_avg >= 151){
@@ -67,9 +69,9 @@ for (my_date in weekend){
     hyper_dust_grade = 1
   }
   
-  dust_criteria = mean(fine_dust_grade, hyper_dust_grade)
+  # dust_criteria = mean(fine_dust_grade, hyper_dust_grade)
   
-  if (dust_criteria > 4){
+  if (fine_dust_grade > 4 | hyper_dust_grade > 4){
     IsDustyDay = 1
   }else {
     IsDustyDay = 0
@@ -79,5 +81,5 @@ for (my_date in weekend){
   result = rbind(result, one_day)
 }
 
-write.csv(result, file = "c:/Multicampus_semi/dust/dust_grade_weekend_2019.csv")
-
+# write.csv(result, file = "c:/Multicampus_semi/dust/dust_grade_weekend_2019.csv")
+write.csv(result, file = "~/GitRepo/Multicampus_semi/dust/dust_grade_weekend_2019.csv")
