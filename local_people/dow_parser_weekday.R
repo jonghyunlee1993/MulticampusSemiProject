@@ -37,7 +37,7 @@ residence_hour = function(fname, res){
   parse_data = data[, c(2, 4, 5, 7:18, 21:32)]
   names(parse_data) = c(default_names, male_names, female_names)
   
-  stay_hours = parse_data[parse_data$시간대 %in% c(10:22) & parse_data$집계구 %in% codes, ]
+  stay_hours = parse_data[parse_data$시간대 %in% c(2:5) & parse_data$집계구 %in% codes, ]
   
   date_res = cbind(date = rep(format(weekday[my_date], "%Y%m%d"), nrow(stay_hours)), stay_hours)
   res = rbind(res, date_res)
