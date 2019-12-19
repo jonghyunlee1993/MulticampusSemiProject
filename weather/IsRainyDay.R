@@ -26,3 +26,13 @@ for (file in files){
 
 res$date = unique(res$date)
 View(res)
+
+res$date = as.integer(res$date)
+
+setwd("~/GitRepo/Multicampus_semi/data_proced/")
+to = read.csv("whether_dust_merged_weekend.csv")
+merged = left_join(to, res, by = "date")
+View(merged)
+
+write.csv(merged, "~/GitRepo/Multicampus_semi/data_proced/weather_dust_weekend_final.csv")
+
