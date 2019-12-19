@@ -25,7 +25,7 @@ parse_weekend = function(dow){
   return(weekend_list)
 }
 
-
+res = NULL
 for (file in files){
   data = read.csv(file, fileEncoding = "UTF-8")
   names(data) = c("date", "time", "age", "sex", "si", "gungu", "pop")
@@ -34,5 +34,19 @@ for (file in files){
   
   weekend_list = parse_weekend(dow)
   
-  data_weekend = data %>% filter(date %in% weekend_list)
+  data_weekend = data %>% filter(date %in% weekend_list & time %in% c(10:20))
+  data_weekend = dcast(data_weekend, date + time + gungu ~ age + sex, mean, value.var = "pop")
+  
+  names(data_weekend)[4:14]
+  
+  final = data_weekend %>% group_by(date, time, gungu) %>% 
+    mutate(whole_pop = sum(`20_남성`, `20_여성`, `30_남성`, `30_여성`, `40_남성`, `40_여성`,
+                           `50_남성`, `50_여성`, `60_남성`, `60_여성`, `70_남성`, `70_여성`)) %>%
+    select(date, time, gungu, whole_pop)
+  
+  res = rbind(res, final)
 }
+
+write.csv(res, "visit_hour_skt.csv")
+
+

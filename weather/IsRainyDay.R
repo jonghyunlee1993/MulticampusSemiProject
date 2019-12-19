@@ -1,6 +1,5 @@
 rm(list = ls())
 
-
 library(dplyr)
 
 setwd("~/GitRepo/Multicampus_semi/weather/")
