@@ -48,7 +48,7 @@ for (file in files){
 View(res)
 write.csv(res, "merged_weather.csv")
 
-weather_df = merger
+weather_df = res
 weather_df$date = as.integer(weather_df$date)
 rm(merger)
 
