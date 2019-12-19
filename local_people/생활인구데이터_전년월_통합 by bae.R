@@ -32,8 +32,14 @@ for (i in 1:35 ){
   setwd('c:/semi-project/data/생활인구_데이터')
   folder_name <- dir()[i]
   cat("\n","<<  ", folder_name,"  >>","\n") #진행사항 확인
+  
   setwd(paste0('c:/semi-project/data/생활인구_데이터/',folder_name))
   file_list <- length(dir())
+  
+  #초기화
+  mon_weekday_df <- data.frame()
+  mon_weekend_df <- data.frame
+  
   
   for (z in 1:file_list ){
     file_name <- dir()[z]
@@ -50,7 +56,6 @@ for (i in 1:35 ){
     }, finally = {
       cat(file_name, " / ")
     })
-        
     
     length(file_data)
     #파일 이름 변환
@@ -72,23 +77,31 @@ for (i in 1:35 ){
         filter(집계구 %in% dm[[3]] , 시간대 %in% c(10:20) ) %>%
         select(contains('시간'),총생활인구,집계구,contains('남'),contains('여'))
       
+      #년도
       weekday_df <- rbind(weekday_df,week_day)
+      #월
+      mon_weekday_df <-rbind(weekday_df,week_day)
     }else if ( day %in% c("토요일","일요일") ){
       week_end <- file_data %>%
         filter(집계구 %in% dm[[3]] , 시간대 %in% c(10:20) ) %>%   
         select(contains('시간'),총생활인구,집계구,contains('남'),contains('여'))
       
+      #년도
       weekend_df <- rbind(weekday_df, week_end)
+      #월
+      mon_weekend_df <- rbind(weekday_df, week_end)
       
-      write.csv(weekday_df,paste0("PA_",mon,"_평일 생활인구 데이터.csv"))
-      write.csv(weekend_df,paste0("PA_",mon,"_주말 생활인구 데이터.csv"))
+      setwd('../../월별_생활인구_데이터')
+      write.csv(mon_weekday_df,paste0(mon,"_평일 생활인구 데이터.csv"))
+      write.csv(mon_weekend_df,paste0(mon,"_주말 생활인구 데이터.csv"))
+      setwd(paste0('c:/semi-project/data/생활인구_데이터/',folder_name))
     }
   }
 }
 
 setwd('c:/semi-project/data/생활인구_데이터')
-wrtie.csv(weekday_df,'종합_평일 생활인구 데이터.csv')
-wrtie.csv(weekend_df,'종합_주말 생활인구 데이터.csv')
+wrtie.csv(weekday_df,'전년도_종합_평일 생활인구 데이터.csv')
+wrtie.csv(weekend_df,'전년도_종합_주말 생활인구 데이터.csv')
 
 
 
