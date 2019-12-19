@@ -43,21 +43,24 @@ for (i in 1:35 ){
   
   for (z in 1:file_list ){
     file_name <- dir()[z]
+    check <- ""
     
     #파일 읽기 : file_data 리턴 , tryCatch로 에러나도 수행 및 확인!
     tryCatch({
       file_data = readfile(folder_name,file_name)
-    }, warning = function(w) {
-      cat("-----------  WARNNING  -----------  :  ",file_name, " / ")
-      next
-    }, error = function(e){
-      cat("-----------   ERROR  -----------  :   ",file_name, " / ")
-      next
-    }, finally = {
+    }, warning=function(w){
+      cat("-----------  WARNNING  -----------  :  ")
+      check<-"warning"
+    }, error=function(e){
+      cat("-----------   ERROR  -----------  :   ")
+      check<-"error"
+    }, finally={
       cat(file_name, " / ")
     })
     
-    length(file_data)
+    if( check=='warning'| check=='error' ) next
+    
+    
     #파일 이름 변환
     names(file_data) <- c('날짜','시간대','행정동코드','집계구','총생활인구','남0',
                           paste0("남", seq(10, 70, 5)),'여0',paste0("여", seq(10, 70, 5)))
