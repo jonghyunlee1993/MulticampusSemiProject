@@ -13,4 +13,4 @@ wd = weather_dust_data[, c(3, 20, 21)]
 wd$IsRainy[is.na(wd$IsRainy)] = 0
 
 library(dplyr)
-df = left_join(visit_pop, wd, by = 'date')
+df = inner_join(visit_pop, wd, by = 'date')
