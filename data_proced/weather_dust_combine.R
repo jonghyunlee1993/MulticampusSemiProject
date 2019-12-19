@@ -109,3 +109,9 @@ rm(res)
 
 final_df = inner_join(weather_df, dust_df, by = "date")
 write.csv(final_df, "weather_dust_merged.csv")
+
+temp = as.Date(as.character(final_df$date), format = "%Y%m%d")
+weekend_df = final_df[weekdays(temp) %in% c("Saturday", "Sunday"), ]
+write.csv(final_df, "whether_dust_merged_weekend.csv")
+
+
