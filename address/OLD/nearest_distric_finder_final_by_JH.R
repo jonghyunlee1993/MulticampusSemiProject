@@ -7,7 +7,7 @@ options("scipen" = 100)
 header = header_data[,2]
 head(header_data)
 
-department = read.csv("점포이름_위도_경도_주소.csv", fileEncoding = "CP949", encoding = "euc-kr")
+department = read.csv("./OLD/점포이름_위도_경도_주소.csv", fileEncoding = "CP949", encoding = "euc-kr")
 head(department)
 
 library(rgdal)
@@ -19,8 +19,8 @@ my_spdf <- readOGR(
 )
 
 # 한국 중부 좌표계
-from_crs = CRS("+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs")
-# from_crs = CRS("+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m")
+# from_crs = CRS("+proj=tmerc +lat_0=38 +lon_0=127 +k=1 +x_0=200000 +y_0=500000 +ellps=GRS80 +units=m +no_defs")
+from_crs = CRS("+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m")
 # 세계 표준 좌표계
 to_crs = CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs")
 
@@ -92,3 +92,4 @@ for (depart in 1:nrow(department)){
   
   invisible(readline(prompt="Press [enter] to continue"))
 }
+
