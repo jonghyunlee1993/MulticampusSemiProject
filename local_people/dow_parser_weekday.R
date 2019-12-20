@@ -5,7 +5,7 @@ options("scipen" = 100)
 setwd("~/GitRepo/Multicampus_semi/address/")
 loc = read.csv("proced_department.csv")
 
-codes = unique(loc$code)
+codes = loc$code
 
 # load local people dataset
 # setwd("/Volumes/MnD_Lee_SSD/Local_people_dataset")
@@ -25,8 +25,8 @@ head(weekday)
 
 # rename col index
 default_names = c("시간대", "집계구", "총생활인구")
-male_names = paste0("남", seq(10, 65, 5))
-female_names = paste0("여", seq(10, 65, 5))
+male_names = paste0("남", seq(0, 70, 5))
+female_names = paste0("여", seq(0, 70, 5))
 
 setwd("/Volumes/Transcend/Local_people_dataset/")
 res = NULL
@@ -36,8 +36,9 @@ residence_hour = function(fname, res){
   
   parse_data = data[, c(2, 4, 5, 7:18, 21:32)]
   names(parse_data) = c(default_names, male_names, female_names)
+  View(parse_data)
   
-  stay_hours = parse_data[parse_data$시간대 %in% c(2:5) & parse_data$집계구 %in% codes, ]
+  stay_hours = parse_data[parse_data$시간대 %in% c(10:22) & parse_data$집계구 %in% codes, ]
   
   date_res = cbind(date = rep(format(weekday[my_date], "%Y%m%d"), nrow(stay_hours)), stay_hours)
   res = rbind(res, date_res)

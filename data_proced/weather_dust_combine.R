@@ -48,7 +48,7 @@ for (file in files){
 View(res)
 write.csv(res, "merged_weather.csv")
 
-weather_df = merger
+weather_df = res
 weather_df$date = as.integer(weather_df$date)
 rm(merger)
 
@@ -112,6 +112,6 @@ write.csv(final_df, "weather_dust_merged.csv")
 
 temp = as.Date(as.character(final_df$date), format = "%Y%m%d")
 weekend_df = final_df[weekdays(temp) %in% c("Saturday", "Sunday"), ]
-write.csv(final_df, "whether_dust_merged_weekend.csv")
+write.csv(weekend_df, "whether_dust_merged_weekend.csv")
 
 
