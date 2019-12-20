@@ -69,21 +69,13 @@ for (i in department$name) {
   }
 }
 
-<<<<<<< HEAD
-=======
 department$str_comp = substr(department$name, 1, 2)
 department$str_comp = as.factor(department$str_comp)
-
->>>>>>> 04c984f6692c6eafda190f1501963ce2f94ad9da
 department = department %>% mutate(comp = ifelse(substr(name, 1, 2) == "신세", 1, 
                                     ifelse(substr(name, 1, 2) == "현대", 2, 3)))
 
-
-<<<<<<< HEAD
 library(rgdal)
 
-=======
->>>>>>> 04c984f6692c6eafda190f1501963ce2f94ad9da
 # Plot it
 fig = ggplot() +
   geom_polygon(data = my_spdf, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
@@ -93,11 +85,14 @@ fig
 
 ggplot() +
   geom_polygon(data = converted, aes( x = long, y = lat, group = group), fill="#69b3a2", color="white") +
-<<<<<<< HEAD
-  theme_void() + geom_point(data = department, aes(lon, lat, colour = factor(comp)))
-=======
-  theme_void() + geom_point(data = department, aes(lon, lat, colour = str_comp))
->>>>>>> 04c984f6692c6eafda190f1501963ce2f94ad9da
+  theme_gray(base_family='AppleMyungjo') +
+  geom_point(data = department, aes(lon, lat, colour = str_comp)) +
+  ggtitle("서울시 집계구 경계 및 백화점 위치")
+
+  # theme_void() + geom_point(data = department, aes(lon, lat, colour = factor(comp)))
+
+  # theme_void() + geom_point(data = department, aes(lon, lat, colour = str_comp))
+
 
 # depart = department[1,]
 # 
@@ -155,9 +150,4 @@ for (depart in 1:nrow(department)){
   
   invisible(readline(prompt="Press [enter] to continue"))
 }
-
-
-
-
->>>>>>> 04c984f6692c6eafda190f1501963ce2f94ad9da
 
