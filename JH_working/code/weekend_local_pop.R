@@ -49,6 +49,7 @@ for (my_date in 1:length(weekend)){
   
   try({res = open_hour(path_data, fname, res)})
 }
+
 rownames(res) <- 1:nrow(res)
 # save(res, file = paste0(path_res, "local_pop_weekend.Rdata"))
 write.csv(res, paste0(path_res, "local_pop_weekend.csv"))
