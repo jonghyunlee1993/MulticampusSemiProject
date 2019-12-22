@@ -22,7 +22,7 @@ for (file in weather_data){
     summarise(mean_temp = mean(temp, na.rm = T), 
               mean_precipi = mean(precipi, na.rm = T),
               mean_wind = mean(wind, na.rm = T),
-              maen_snow = mean(snow, na.rm = T)) %>% 
+              mean_snow = mean(snow, na.rm = T)) %>% 
     mutate(IsRainyDay = ifelse(mean_precipi >= 1, 1, 0))
 
   weather_res = rbind(weather_res, proced)
@@ -80,6 +80,12 @@ hyper_dust_grade_calculator = function(dust_avg){
   return(dust_grade)
 }
 
+IsDusty = function(data){
+  IsDustyDay = ifelse(data[[1]] > 4 | data[[2]] >4, 1, 0)
+  
+  return(IsDustyDay)
+}
+
 dust_res = NULL
 
 for (file in air_data){
@@ -90,10 +96,21 @@ for (file in air_data){
   fine_dust_grade = apply(fine_avg[2], 1, dust_grade_calculator)
   hyper_dust_grade = apply(hyper_avg[2], 1, hyper_dust_grade_calculator)
   
+  IsDustyDay = apply(cbind(fine_dust_grade, hyper_dust_grade), 1, IsDusty)
+  
   year_dust = left_join(fine_avg, hyper_avg, by = "date")
-  year_dust = cbind(year_dust, fine_dust_grade, hyper_dust_grade)
+  year_dust = cbind(year_dust, fine_dust_grade, hyper_dust_grade, IsDustyDay)
+  
+  
   
   dust_res = rbind(dust_res, year_dust)
 }
 
-names(dust_res) = c("date", "fine_dust", "hyper_dust", "fine_dust_grade", "hyper_dust_grade")
+names(dust_res) = c("date", "fine_dust", "hyper_dust", 
+                    "fine_dust_grade", "hyper_dust_grade", "IsDustyDay")
+
+# weather dust merging
+weather_dust_df = left_join(weather_res, dust_res, by = "date")
+write.csv(weather_dust_df, paste0(path_res, "weather_dust_proc.csv"))
+
+
