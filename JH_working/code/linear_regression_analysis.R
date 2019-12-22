@@ -158,3 +158,7 @@ summary(model9_step)
 
 plot(model9_step)
 
+library(car)
+vif(model9_step)
+
+
