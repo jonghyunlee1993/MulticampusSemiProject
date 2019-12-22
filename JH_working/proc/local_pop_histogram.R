@@ -1,6 +1,8 @@
 rm(list = ls())
 
-load("local_pop_weekend.Rdata")
+path_res = "~/GitRepo/Multicampus_semi/JH_working/proc/"
+
+load(paste0(path_res, "local_pop_weekend.Rdata"))
 data = res
 
 library(dplyr)
@@ -17,3 +19,8 @@ codes = unique(data$집계구)
 for (code in codes){
   show_hist(code)
 }
+
+1113075030009
+1115051010002
+1121052010001
+1123063020012
