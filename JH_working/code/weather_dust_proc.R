@@ -32,3 +32,68 @@ View(weather_res)
 
 # load airquality data
 air_data = c("air_quality_2017.csv", "air_quality_2018.csv", "air_quality_2019.csv")
+
+# 미세, 초미세 먼지 값 평균 / 상, 하위 10% 제거 
+dust_avg = function(data, num){
+  if (num == 7){
+    dust_val = data %>% 
+      select(c(1,num)) %>% 
+      rename(date = 측정일시, dust = 미세먼지.....) %>% 
+      group_by(date) %>% 
+      summarise(dust_avg = mean(dust, na.rm = T, trim = 10))
+  }else if (num == 8){
+    dust_val = data %>% 
+      select(c(1,num)) %>% 
+      rename(date = 측정일시, dust = 초미세먼지.....) %>% 
+      group_by(date) %>% 
+      summarise(dust_avg = mean(dust, na.rm = T, trim = 10))
+  }
+
+  return(dust_val)
+}
+
+# 미세먼지 등급
+dust_grade_calculator = function(dust_avg){
+  if (dust_avg >= 151) dust_grade = 8
+  else if (dust_avg >= 101) dust_grade = 7
+  else if (dust_avg >= 76) dust_grade = 6
+  else if (dust_avg >= 51) dust_grade = 5
+  else if (dust_avg >= 41) dust_grade = 4
+  else if (dust_avg >= 31) dust_grade = 3
+  else if (dust_avg >= 16) dust_grade = 2
+  else dust_grade = 1
+  
+  return(dust_grade)
+}
+
+# 미세먼지 등급
+hyper_dust_grade_calculator = function(dust_avg){
+  if (dust_avg >= 76) dust_grade = 8
+  else if (dust_avg >= 51) dust_grade = 7
+  else if (dust_avg >= 38) dust_grade = 6
+  else if (dust_avg >= 26) dust_grade = 5
+  else if (dust_avg >= 21) dust_grade = 4
+  else if (dust_avg >= 16) dust_grade = 3
+  else if (dust_avg >= 9) dust_grade = 2
+  else dust_grade = 1
+  
+  return(dust_grade)
+}
+
+dust_res = NULL
+
+for (file in air_data){
+  year_data = read.csv(file, stringsAsFactors = F)
+  fine_avg = dust_avg(year_data, 7)
+  hyper_avg = dust_avg(year_data, 8)
+  
+  fine_dust_grade = apply(fine_avg[2], 1, dust_grade_calculator)
+  hyper_dust_grade = apply(hyper_avg[2], 1, hyper_dust_grade_calculator)
+  
+  year_dust = left_join(fine_avg, hyper_avg, by = "date")
+  year_dust = cbind(year_dust, fine_dust_grade, hyper_dust_grade)
+  
+  dust_res = rbind(dust_res, year_dust)
+}
+
+names(dust_res) = c("date", "fine_dust", "hyper_dust", "fine_dust_grade", "hyper_dust_grade")
