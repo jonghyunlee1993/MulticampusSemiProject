@@ -115,33 +115,33 @@ summary(model8)
 
 step(model8, direction = "both")
 
-model9  = lm(mean_pop ~ size + residential_area + commercial_area + green_area +
-               pop_density + arrival + fine_dust + hyper_dust +
-               mean_precipi + mean_temp,
+model9  = lm(log(mean_pop) ~ size + residential_area + log(commercial_area) + green_area +
+               pop_density + log(arrival) + fine_dust + hyper_dust +
+               mean_precipi + mean_temp + mean_snow + mean_wind,
              data = df)
 
 step(model9, direction = "both")
 
-model9_step = lm(formula = mean_pop ~ size + residential_area + commercial_area + 
+model9_step = lm(formula = log(mean_pop) ~ size + residential_area + commercial_area + 
                    green_area + pop_density + arrival + fine_dust, 
                  data = df)
 
 summary(model9_step)
 
-model10  = lm(mean_pop ~ size + residential_area + commercial_area + green_area +
+model10  = lm(log(mean_pop) ~ size + residential_area + commercial_area + green_area +
                pop_density + arrival + fine_dust_grade + hyper_dust_grade +
                mean_precipi + mean_temp,
              data = df)
 
 step(model10, direction = "both")
 
-model10_step = lm(formula = mean_pop ~ size + residential_area + commercial_area + 
+model10_step = lm(formula = log(mean_pop) ~ size + residential_area + commercial_area + 
                     green_area + pop_density + arrival + fine_dust_grade, 
                   data = df)
 
 summary(model10_step)
 
-model11 = lm(mean_pop ~ size + residential_area + commercial_area + green_area +
+model11 = lm(log(mean_pop) ~ size + residential_area + commercial_area + green_area +
                pop_density + arrival + factor(IsDustyDay) + factor(IsRainyDay) +
                mean_precipi + mean_temp,
              data = df)
