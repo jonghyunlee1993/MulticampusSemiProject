@@ -13,12 +13,12 @@ pop = read.csv(paste0(path_res, "local_pop_weekend.csv"), stringsAsFactors = F)[
 pop[pop == "*"] = NA
 pop[, 5:length(pop)] = apply(pop[, 5:length(pop)], 2, as.integer)
 
-# mean visit pop의 sd가 500이 넘어가는 백화점 두 곳 제외
-# 현대 신촌점, 롯데 관악점
+# mean visit pop의 sd가 500이 넘어가는 백화점 네 곳 제외
+# 현대 신촌점, 롯데 관악점, 현대 목동점, 롯데 강남점
 pop_df = pop %>% group_by(date, 집계구) %>%  
   summarise(mean_pop = mean(총생활인구)) %>% 
   rename(code = 집계구) %>% 
-  filter(!code %in% c(1113075030009, 1121052010001))
+  filter(!code %in% c(1113075030009, 1121052010001, 1121052010001, 1123063020012))
 
 # load department meta data
 department = read.csv(paste0(path_meta, "department.csv"), stringsAsFactors = F)
@@ -36,6 +36,9 @@ weather_dust[is.na(weather_dust)] = 0
 df = left_join(pop_df, department[, 1:7], by = c("code"))
 df = inner_join(df, subway, by = c("date", "subway_code"))
 df = inner_join(df, weather_dust, by = "date")
+
+# df_pop_weather_dust_subway = df
+# save(df_pop_weather_dust_subway, file = paste0(path_res, "final_df_for_analysis.Rdata"))
 
 # make panel dataset
 # pd = pdata.frame(as.data.frame(df), index = c("date", "code"))
@@ -160,5 +163,3 @@ plot(model9_step)
 
 library(car)
 vif(model9_step)
-
-

@@ -15,7 +15,8 @@ departments = data %>%
   as.data.frame
 
 # cen <- c(mean(departments$lon), mean(departments$lat))
-cen = c(127.0016985, 37.5642135)
+# cen = c(127.0016985, 37.5642135)
+cen = c(126.98, 37.5642135)
 
 register_google(key='AIzaSyD8k2DWC_7yFHCrH6LDR3RfITsmWMEqC8c')
 map <- get_googlemap(center = cen,
@@ -38,17 +39,20 @@ theme.ax <- element_text(family="NanumGothic", face="bold", size=10, angle=00, h
 theme.leti<-element_text(family="NanumGothic", face="bold") #범례 제목 (legend) 스타일 변경, 범례가 있을 경우에만 쓰세요
 theme.lete<-element_text(family="NanumGothic") #범례 항목 (legend) 스타일 변경, 범례가 있을 경우에만 쓰세요
 
+theme_update(text = element_text(family = "NanumGothic"))
 ggmap(map) +
   geom_polygon(data = converted, aes(x = long, y = lat, group = group), alpha = 0.6, fill='lightblue') +
   geom_point(data = departments, aes(colour = 회사명), size = 4, alpha = 0.5) +
-  scale_colour_manual(values = c('red','blue','green')) +
-  ggtitle("서울 소재 백화점") +
+  # scale_color_discrete(breaks = c("롯데", "현대", "신세계")) +
+  scale_colour_manual(values = c("롯데" = 'red', "현대" = "blue", "신세계" = 'yellow')) +
+  ggtitle("분석 대상 서울 소재 백화점") +
   labs(x = "경도", y = "위도") +
+  # geom_text(data = departments, aes(label = name)) +
   theme(plot.title = theme.ti,
         axis.title = theme.ax,
         legend.title = theme.leti, 
         legend.text = theme.lete, 
-        legend.position = c(0.85, 0.2))
+        legend.position = c(0.88, 0.16))
   # theme(legend.text = element_text(size = 16),
   #       legend.position = "bottom")
   # geom_label(data = departments, label = departments$name, nudge_x = 0.04, alpha = 0, label.size = NA) + 
