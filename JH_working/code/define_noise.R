@@ -22,6 +22,10 @@ pop_df = pop %>% group_by(date, 집계구) %>%
   summarise(mean_pop = mean(총생활인구)) %>% 
   rename(code = 집계구)
 
+codes = c(1119074050002, 1117051030003, 1125073030012,1123058040002, 1123051010201, 1113075030010,
+          1115051010004, 1108068010004, 1124080020103, 1102052020001, 1111066030001, 1123063020021,
+          1105066011201, 1121052010001, 1124077030001, 1109071040007)
+
 show_hist = function(code){
   X = pop_df[pop_df$code == code, ]
   
@@ -29,7 +33,7 @@ show_hist = function(code){
   
   fig = ggplot(data = X, aes(x = mean_pop)) +
     geom_histogram(fill = "lightblue", colour = "black", bins = 10) +
-    ggtitle(paste("집계구", code, department[department$code == code, ]$name)) +
+    ggtitle(paste("집계구", code, department[codes == code, ]$name)) +
     labs(x = "일평균 생활인구", y = "횟수") +
     theme(plot.title = theme.ti,
           axis.title = theme.ax)
@@ -37,23 +41,8 @@ show_hist = function(code){
   print(fig)
 }
 
-# 신촌
-show_hist(1113075030009)
-
-# 목동 
-show_hist(1115051010002)
-
-# 관악 
-show_hist(1121052010001)
-
-# 강남
-show_hist(1123063020012)
-
-# noise = c(1113075030009, 1121052010001, 1121052010001, 1123063020012)
-
-# 영등포 
-show_hist(1119074050006)
-
-for (dept_code in department$code){
+for (dept_code in codes){
   show_hist(dept_code)
 }
+
+# 관악 이상치 가능성 112105010001

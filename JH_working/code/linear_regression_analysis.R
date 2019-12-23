@@ -21,7 +21,10 @@ pop_df = pop %>% group_by(date, 집계구) %>%
   filter(!code %in% c(1113075030009, 1121052010001, 1121052010001, 1123063020012))
 
 # load department meta data
-department = read.csv(paste0(path_meta, "department.csv"), stringsAsFactors = F)
+# department = read.csv(paste0(path_meta, "department.csv"), stringsAsFactors = F)
+library(xlsx)
+# department = read.xlsx(paste0(path_meta, "department.xls"), 1)
+# department$code = as.integer(as.character(department$code))
 
 # load subway_data
 subway = read.csv(paste0(path_res, "weekend_subway.csv"), stringsAsFactors = F)[, -1]

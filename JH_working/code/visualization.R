@@ -43,11 +43,9 @@ theme_update(text = element_text(family = "NanumGothic"))
 ggmap(map) +
   geom_polygon(data = converted, aes(x = long, y = lat, group = group), alpha = 0.6, fill='lightblue') +
   geom_point(data = departments, aes(colour = 회사명), size = 4, alpha = 0.5) +
-  # scale_color_discrete(breaks = c("롯데", "현대", "신세계")) +
   scale_colour_manual(values = c("롯데" = 'red', "현대" = "blue", "신세계" = 'yellow')) +
   ggtitle("분석 대상 서울 소재 백화점") +
   labs(x = "경도", y = "위도") +
-  # geom_text(data = departments, aes(label = name)) +
   theme(plot.title = theme.ti,
         axis.title = theme.ax,
         legend.title = theme.leti, 
