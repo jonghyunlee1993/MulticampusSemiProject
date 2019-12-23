@@ -13,18 +13,19 @@ pop = read.csv(paste0(path_res, "local_pop_weekend.csv"), stringsAsFactors = F)[
 pop[pop == "*"] = NA
 pop[, 5:length(pop)] = apply(pop[, 5:length(pop)], 2, as.integer)
 
-# mean visit pop의 sd가 500이 넘어가는 백화점 네 곳 제외
-# 현대 신촌점, 롯데 관악점, 현대 목동점, 롯데 강남점
+# 16개 백화점 집계구 포함
 pop_df = pop %>% group_by(date, 집계구) %>%  
   summarise(mean_pop = mean(총생활인구)) %>% 
-  rename(code = 집계구) %>% 
-  filter(!code %in% c(1113075030009, 1121052010001, 1121052010001, 1123063020012))
+  rename(code = 집계구)
 
 # load department meta data
-# department = read.csv(paste0(path_meta, "department.csv"), stringsAsFactors = F)
-library(xlsx)
-# department = read.xlsx(paste0(path_meta, "department.xls"), 1)
-# department$code = as.integer(as.character(department$code))
+department = read.csv(paste0(path_meta, "department.csv"), stringsAsFactors = F)
+
+codes = c(1119074050002, 1117051030003, 1125073030012,1123058040002, 1123051010201, 1113075030010,
+          1115051010004, 1108068010004, 1124080020103, 1102052020001, 1111066030001, 1123063020021,
+          1105066011201, 1121052010001, 1124077030001, 1109071040007)
+
+department$code = codes
 
 # load subway_data
 subway = read.csv(paste0(path_res, "weekend_subway.csv"), stringsAsFactors = F)[, -1]
@@ -122,7 +123,7 @@ model9  = lm(mean_pop ~ size + residential_area + commercial_area + green_area +
 step(model9, direction = "both")
 
 model9_step = lm(formula = mean_pop ~ size + residential_area + commercial_area + 
-                   green_area + pop_density + arrival + fine_dust + mean_temp, 
+                   green_area + pop_density + arrival + fine_dust, 
                  data = df)
 
 summary(model9_step)
@@ -135,7 +136,7 @@ model10  = lm(mean_pop ~ size + residential_area + commercial_area + green_area 
 step(model10, direction = "both")
 
 model10_step = lm(formula = mean_pop ~ size + residential_area + commercial_area + 
-                    green_area + pop_density + arrival + fine_dust_grade + mean_temp, 
+                    green_area + pop_density + arrival + fine_dust_grade, 
                   data = df)
 
 summary(model10_step)
@@ -144,7 +145,14 @@ model11 = lm(mean_pop ~ size + residential_area + commercial_area + green_area +
                pop_density + arrival + factor(IsDustyDay) + factor(IsRainyDay) +
                mean_precipi + mean_temp,
              data = df)
+
 step(model11, direction = "both")
+
+model11_step = lm(formula = mean_pop ~ size + residential_area + commercial_area + 
+                    green_area + pop_density + arrival + factor(IsDustyDay) + 
+                    factor(IsRainyDay), data = df)
+
+summary(model11_step)
 
 ###### final_model 
 
