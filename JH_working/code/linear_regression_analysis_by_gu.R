@@ -2,7 +2,7 @@ rm(list = ls())
 
 options(scipen = 100)
 
-library(plm)
+# library(plm)
 library(dplyr)
 
 path_meta = "~/GitRepo/Multicampus_semi/JH_working/data/"
@@ -39,8 +39,7 @@ df = left_join(pop_df, department[, 1:7], by = c("code"))
 df = inner_join(df, subway, by = c("date", "subway_code"))
 df = inner_join(df, weather_dust, by = c("date", "code"))
 
-# df_pop_weather_dust_subway = df
-# save(df_pop_weather_dust_subway, file = paste0(path_res, "final_df_for_analysis.Rdata"))
+save(df, file = paste0(path_res, "final_df_for_liner_model.Rdata"))
 
 # make panel dataset
 # pd = pdata.frame(as.data.frame(df), index = c("date", "code"))
