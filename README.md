@@ -498,9 +498,8 @@ MAPE는 비율 에러를 측정하는 방법으로  $A_t$는 실제 값, $F_t$�
 
 
 
-$$
-MAPE = \frac{100}{n} \sum_{t=1}^{n}|\frac{A_t - F_t}{A_t}|
-$$
+![MAPE](Working/project_report/figure/MAPE.png)
+
 
 
 
