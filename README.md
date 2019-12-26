@@ -167,8 +167,7 @@ date: '2019 12 26'
 
 
 ***
-
-## 
+## 데이터 
 
 
 
@@ -374,9 +373,7 @@ step(model, direction = "both")
 아래와 같이 최종 모델 도출
 
 
-$$
-log(Pop) = \beta_1 \cdot Size + \beta_2 \cdot Resid + \beta_3 \cdot Commerce + \beta_4 \cdot Green + \beta_5 \cdot Density + \beta_6 \cdot Arrival + \beta_7 \cdot Fine + \beta_8 \cdot Hyper + \beta_0 + \epsilon
-$$
+![latex](./Working/project_report/figure/CodeCogsEqn.png)
 
 - Pop      : 주말 백화점 개점 시간(10 ~ 20) 유동 인구의 수
 - Size     : 백화점의 총 면적
