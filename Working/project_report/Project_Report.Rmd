@@ -188,7 +188,7 @@ $~$
 ## 
 
 ```{r, include = FALSE}
-url = "https://raw.githubusercontent.com/jonghyunlee1993/Multicampus_semi/master/JH_working/proc/final_df_for_linear_model.csv"
+url = "https://raw.githubusercontent.com/jonghyunlee1993/Multicampus_semi/master/Working/proc/final_df_for_linear_model.csv"
 df = read.csv(url, fileEncoding = "UTF-8")[, -1]
 df$code = as.factor(df$code)
 df$IsDustyDay = as.factor(df$IsDustyDay)
