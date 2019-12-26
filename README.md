@@ -67,7 +67,7 @@ date: '2019 12 26'
 
 ## 서울 소재 백화점
 
-<img src="./departments.jpeg" title="plot of chunk images" alt="plot of chunk images" width="100%" />
+<img src="./Working/project_report/departments.jpeg" title="plot of chunk images" alt="plot of chunk images" width="100%" />
 
 
 
@@ -221,7 +221,7 @@ summary(df)
 
 정규화를 위해 log 변환을 실시
 
-![plot of chunk histogram](figure/histogram-1.png)
+![plot of chunk histogram](./Working/project_report/figure/histogram-1.png)
 
 
 
@@ -445,7 +445,7 @@ ggplot(data=as.data.frame(qqnorm( model_stdres , plot=F)), mapping=aes(x=x, y=y)
   ggtitle("QQ plot of Residuals")
 ```
 
-![plot of chunk hist](figure/hist-1.png)
+![plot of chunk hist](Working/project_report/figure/hist-1.png)
 
 
 
