@@ -3,14 +3,7 @@ title: "백화점 유인 효과 분석"
 subtitle: "기상 조건을 중심으로"
 author: "HAPPY BEAN"
 date: '2019 12 26'
-output: html_document
-editor_options: 
-  chunk_output_type: console
 ---
-
-
-
-
 
 ***
 ## 프로젝트 정의
@@ -31,12 +24,12 @@ editor_options:
 자료 제공처 | 수집 데이터 
 ------ | ------
 서울열린데이터광장 | 서울 생활인구 내국인
- | 일별 평균 대기오염도
- | 강수량 및 강우일수 통계
- | 지하철 역별 승하차 인원 정보
- | 구별 용지 비율
- | 구별 인구 밀도
- | 구별 유통업체 현황
+' | 일별 평균 대기오염도
+' | 강수량 및 강우일수 통계
+' | 지하철 역별 승하차 인원 정보
+' | 구별 용지 비율
+' | 구별 인구 밀도
+' | 구별 유통업체 현황
 기상청 날씨마루 | 시간별 강수량, 풍량, 풍속, 적설량
 통계청 | 전국 집계 구역
 주요 3사 백화점 | 롯데, 현대, 신세계 백화점 주소 (25개소)
@@ -79,7 +72,7 @@ editor_options:
 
 
 ## 분석 대상 백화점 선정
-### 국내 백화점 상위 3사
+### 국내 백화점 상위  3사
 
 - 배제 기준: 대중교통시설 포함 집계 구역 (기차, 공항, 버스)
 - 하나의 집계구에 여러 백화점이 있는 경우는 총 면적 합산
@@ -156,20 +149,20 @@ editor_options:
 ----- |------ | -----
 백화점 요소 | 백화점 총 면적(m²) | size
 지역 환경 요소 | 지하철역 하차 인원(명) | arrival
- | 주거지 비율(%) | residential_area
- | 상업지 비율(%) | commercial_area
- | 녹지 비율(%) | green_area
- | 인구 밀도(명/㎢) | pop_density
+' | 주거지 비율(%) | residential_area
+' | 상업지 비율(%) | commercial_area
+' | 녹지 비율(%) | green_area
+' | 인구 밀도(명/㎢) | pop_density
 기상 조건 요소 | 일평균 미세먼지(㎍/m³) | fine_dust
- | 일평균 초미세먼지(㎍/m³) | hyper_dust
- | 일평균 강수량(mm) | mean_precipitation
- | 일평균 기온(°C) | mean_temperature
- | 일평균 풍속(m/s) | mean_wind
- | 일평균 적설량(cm) | mean_snow
- | 미세먼지 등급 | fine_dust_grade
- | 초미세먼지 등급 | hyper_dust_grade
- | 먼지 많은 날 | IsDustyDay
- | 비오는 날 | IsRainyDay
+' | 일평균 초미세먼지(㎍/m³) | hyper_dust
+' | 일평균 강수량(mm) | mean_precipitation
+' | 일평균 기온(°C) | mean_temperature
+' | 일평균 풍속(m/s) | mean_wind
+' | 일평균 적설량(cm) | mean_snow
+' | 미세먼지 등급 | fine_dust_grade
+' | 초미세먼지 등급 | hyper_dust_grade
+' | 먼지 많은 날 | IsDustyDay
+' | 비오는 날 | IsRainyDay
 
 
 
@@ -185,85 +178,37 @@ summary(df)
 ```
 
 ```
-##       date                     code     
-##  Min.   :20170101   1102052020001: 268  
-##  1st Qu.:20170824   1105066011201: 268  
-##  Median :20180666   1108068010004: 268  
-##  Mean   :20180091   1109071040007: 268  
-##  3rd Qu.:20190308   1111066030001: 268  
-##  Max.   :20191130   1113075030010: 268  
-##                     (Other)      :2680  
-##     mean_pop          size       
-##  Min.   :   76   Min.   : 18578  
-##  1st Qu.: 3540   1st Qu.: 70475  
-##  Median : 7681   Median : 90163  
-##  Mean   :10442   Mean   :160502  
-##  3rd Qu.:13949   3rd Qu.:147194  
-##  Max.   :54512   Max.   :807686  
-##                                  
-##   subway_code     residential_area
-##  Min.   : 202.0   Min.   :0.3290  
-##  1st Qu.: 218.2   1st Qu.:0.4957  
-##  Median : 283.0   Median :0.6102  
-##  Mean   : 747.4   Mean   :0.5769  
-##  3rd Qu.: 568.0   3rd Qu.:0.6207  
-##  Max.   :2548.0   Max.   :0.8730  
-##                                   
-##  commercial_area     green_area     
-##  Min.   :0.01144   Min.   :0.00252  
-##  1st Qu.:0.01532   1st Qu.:0.25739  
-##  Median :0.03688   Median :0.32457  
-##  Mean   :0.05977   Mean   :0.32923  
-##  3rd Qu.:0.05247   3rd Qu.:0.38527  
-##  Max.   :0.39218   Max.   :0.59070  
-##                                     
-##   pop_density       arrival      
-##  Min.   :13618   Min.   :  1024  
-##  1st Qu.:16198   1st Qu.: 18762  
-##  Median :18218   Median : 29984  
-##  Mean   :18258   Mean   : 35142  
-##  3rd Qu.:19883   3rd Qu.: 49964  
-##  Max.   :26894   Max.   :143134  
-##                                  
-##     district      fine_dust     
-##  강남구 : 804   Min.   :  3.00  
-##  강북구 : 536   1st Qu.: 23.00  
-##  송파구 : 536   Median : 36.00  
-##  강동구 : 268   Mean   : 40.92  
-##  관악구 : 268   3rd Qu.: 54.00  
-##  광진구 : 268   Max.   :243.00  
-##  (Other):1608                   
-##    hyper_dust     fine_dust_grade
-##  Min.   :  1.00   Min.   :1.000  
-##  1st Qu.: 12.00   1st Qu.:2.000  
-##  Median : 20.00   Median :3.000  
-##  Mean   : 24.05   Mean   :3.312  
-##  3rd Qu.: 31.00   3rd Qu.:5.000  
-##  Max.   :106.00   Max.   :8.000  
-##                                  
-##  hyper_dust_grade IsDustyDay   mean_temp      
-##  Min.   :1.000    0:2589     Min.   :-10.429  
-##  1st Qu.:2.000    1:1699     1st Qu.:  4.749  
-##  Median :3.000               Median : 15.992  
-##  Mean   :3.615               Mean   : 13.896  
-##  3rd Qu.:5.000               3rd Qu.: 23.309  
-##  Max.   :8.000               Max.   : 31.550  
-##                                               
-##   mean_precipi      mean_wind     
-##  Min.   : 0.000   Min.   :0.7833  
-##  1st Qu.: 0.000   1st Qu.:1.4698  
-##  Median : 0.000   Median :1.8104  
-##  Mean   : 0.394   Mean   :1.9320  
-##  3rd Qu.: 0.100   3rd Qu.:2.3021  
-##  Max.   :12.136   Max.   :3.8500  
-##                                   
-##    mean_snow       IsRainyDay
-##  Min.   :0.00000   0:3840    
-##  1st Qu.:0.00000   1: 448    
-##  Median :0.00000             
-##  Mean   :0.08191             
-##  3rd Qu.:0.00000             
-##  Max.   :4.62941             
+##       date                     code         mean_pop          size         subway_code    
+##  Min.   :20170101   1102052020001: 268   Min.   :   76   Min.   : 18578   Min.   : 202.0  
+##  1st Qu.:20170824   1105066011201: 268   1st Qu.: 3540   1st Qu.: 70475   1st Qu.: 218.2  
+##  Median :20180666   1108068010004: 268   Median : 7681   Median : 90163   Median : 283.0  
+##  Mean   :20180091   1109071040007: 268   Mean   :10442   Mean   :160502   Mean   : 747.4  
+##  3rd Qu.:20190308   1111066030001: 268   3rd Qu.:13949   3rd Qu.:147194   3rd Qu.: 568.0  
+##  Max.   :20191130   1113075030010: 268   Max.   :54512   Max.   :807686   Max.   :2548.0  
+##                     (Other)      :2680                                                    
+##  residential_area commercial_area     green_area       pop_density       arrival      
+##  Min.   :0.3290   Min.   :0.01144   Min.   :0.00252   Min.   :13618   Min.   :  1024  
+##  1st Qu.:0.4957   1st Qu.:0.01532   1st Qu.:0.25739   1st Qu.:16198   1st Qu.: 18762  
+##  Median :0.6102   Median :0.03688   Median :0.32457   Median :18218   Median : 29984  
+##  Mean   :0.5769   Mean   :0.05977   Mean   :0.32923   Mean   :18258   Mean   : 35142  
+##  3rd Qu.:0.6207   3rd Qu.:0.05247   3rd Qu.:0.38527   3rd Qu.:19883   3rd Qu.: 49964  
+##  Max.   :0.8730   Max.   :0.39218   Max.   :0.59070   Max.   :26894   Max.   :143134  
+##                                                                                       
+##     district      fine_dust        hyper_dust     fine_dust_grade hyper_dust_grade IsDustyDay
+##  강남구 : 804   Min.   :  3.00   Min.   :  1.00   Min.   :1.000   Min.   :1.000    0:2589    
+##  강북구 : 536   1st Qu.: 23.00   1st Qu.: 12.00   1st Qu.:2.000   1st Qu.:2.000    1:1699    
+##  송파구 : 536   Median : 36.00   Median : 20.00   Median :3.000   Median :3.000              
+##  강동구 : 268   Mean   : 40.92   Mean   : 24.05   Mean   :3.312   Mean   :3.615              
+##  관악구 : 268   3rd Qu.: 54.00   3rd Qu.: 31.00   3rd Qu.:5.000   3rd Qu.:5.000              
+##  광진구 : 268   Max.   :243.00   Max.   :106.00   Max.   :8.000   Max.   :8.000              
+##  (Other):1608                                                                                
+##    mean_temp        mean_precipi      mean_wind        mean_snow       IsRainyDay
+##  Min.   :-10.429   Min.   : 0.000   Min.   :0.7833   Min.   :0.00000   0:3840    
+##  1st Qu.:  4.749   1st Qu.: 0.000   1st Qu.:1.4698   1st Qu.:0.00000   1: 448    
+##  Median : 15.992   Median : 0.000   Median :1.8104   Median :0.00000             
+##  Mean   : 13.896   Mean   : 0.394   Mean   :1.9320   Mean   :0.08191             
+##  3rd Qu.: 23.309   3rd Qu.: 0.100   3rd Qu.:2.3021   3rd Qu.:0.00000             
+##  Max.   : 31.550   Max.   :12.136   Max.   :3.8500   Max.   :4.62941             
 ## 
 ```
 
@@ -298,202 +243,118 @@ step(model, direction = "both")
 ##     pop_density + arrival + fine_dust * hyper_dust + mean_precipi + 
 ##     mean_temp + mean_snow + mean_wind
 ## 
-##                        Df Sum of Sq    RSS
-## - mean_wind             1      0.06 3078.2
-## - mean_temp             1      0.16 3078.3
-## - fine_dust:hyper_dust  1      0.16 3078.3
-## - mean_snow             1      0.33 3078.4
-## - mean_precipi          1      0.37 3078.5
-## <none>                              3078.1
-## - commercial_area       1     15.31 3093.4
-## - arrival               1     36.31 3114.4
-## - green_area            1     43.47 3121.6
-## - residential_area      1     90.66 3168.8
-## - pop_density           1     94.86 3173.0
-## - size                  1    579.66 3657.8
-##                             AIC
-## - mean_wind            -1395.39
-## - mean_temp            -1395.26
-## - fine_dust:hyper_dust -1395.25
-## - mean_snow            -1395.03
-## - mean_precipi         -1394.97
-## <none>                 -1393.48
-## - commercial_area      -1374.21
-## - arrival              -1345.19
-## - green_area           -1335.35
-## - residential_area     -1271.01
-## - pop_density          -1265.33
-## - size                  -655.64
+##                        Df Sum of Sq    RSS      AIC
+## - mean_wind             1      0.06 3078.2 -1395.39
+## - mean_temp             1      0.16 3078.3 -1395.26
+## - fine_dust:hyper_dust  1      0.16 3078.3 -1395.25
+## - mean_snow             1      0.33 3078.4 -1395.03
+## - mean_precipi          1      0.37 3078.5 -1394.97
+## <none>                              3078.1 -1393.48
+## - commercial_area       1     15.31 3093.4 -1374.21
+## - arrival               1     36.31 3114.4 -1345.19
+## - green_area            1     43.47 3121.6 -1335.35
+## - residential_area      1     90.66 3168.8 -1271.01
+## - pop_density           1     94.86 3173.0 -1265.33
+## - size                  1    579.66 3657.8  -655.64
 ## 
 ## Step:  AIC=-1395.39
 ## log(mean_pop) ~ size + residential_area + commercial_area + green_area + 
 ##     pop_density + arrival + fine_dust + hyper_dust + mean_precipi + 
 ##     mean_temp + mean_snow + fine_dust:hyper_dust
 ## 
-##                        Df Sum of Sq    RSS
-## - mean_temp             1      0.13 3078.3
-## - fine_dust:hyper_dust  1      0.15 3078.3
-## - mean_snow             1      0.32 3078.5
-## - mean_precipi          1      0.36 3078.5
-## <none>                              3078.2
-## + mean_wind             1      0.06 3078.1
-## - commercial_area       1     15.36 3093.5
-## - arrival               1     36.27 3114.4
-## - green_area            1     43.42 3121.6
-## - residential_area      1     90.61 3168.8
-## - pop_density           1     94.93 3173.1
-## - size                  1    579.82 3658.0
-##                             AIC
-## - mean_temp            -1397.21
-## - fine_dust:hyper_dust -1397.18
-## - mean_snow            -1396.94
-## - mean_precipi         -1396.90
-## <none>                 -1395.39
-## + mean_wind            -1393.48
-## - commercial_area      -1376.05
-## - arrival              -1347.17
-## - green_area           -1337.33
-## - residential_area     -1272.99
-## - pop_density          -1267.16
-## - size                  -657.38
+##                        Df Sum of Sq    RSS      AIC
+## - mean_temp             1      0.13 3078.3 -1397.21
+## - fine_dust:hyper_dust  1      0.15 3078.3 -1397.18
+## - mean_snow             1      0.32 3078.5 -1396.94
+## - mean_precipi          1      0.36 3078.5 -1396.90
+## <none>                              3078.2 -1395.39
+## + mean_wind             1      0.06 3078.1 -1393.48
+## - commercial_area       1     15.36 3093.5 -1376.05
+## - arrival               1     36.27 3114.4 -1347.17
+## - green_area            1     43.42 3121.6 -1337.33
+## - residential_area      1     90.61 3168.8 -1272.99
+## - pop_density           1     94.93 3173.1 -1267.16
+## - size                  1    579.82 3658.0  -657.38
 ## 
 ## Step:  AIC=-1397.21
 ## log(mean_pop) ~ size + residential_area + commercial_area + green_area + 
 ##     pop_density + arrival + fine_dust + hyper_dust + mean_precipi + 
 ##     mean_snow + fine_dust:hyper_dust
 ## 
-##                        Df Sum of Sq    RSS
-## - fine_dust:hyper_dust  1      0.19 3078.5
-## - mean_snow             1      0.25 3078.6
-## - mean_precipi          1      0.32 3078.6
-## <none>                              3078.3
-## + mean_temp             1      0.13 3078.2
-## + mean_wind             1      0.04 3078.3
-## - commercial_area       1     15.33 3093.6
-## - arrival               1     36.23 3114.5
-## - green_area            1     43.51 3121.8
-## - residential_area      1     90.75 3169.1
-## - pop_density           1     94.96 3173.3
-## - size                  1    579.73 3658.0
-##                             AIC
-## - fine_dust:hyper_dust -1398.94
-## - mean_snow            -1398.87
-## - mean_precipi         -1398.77
-## <none>                 -1397.21
-## + mean_temp            -1395.39
-## + mean_wind            -1395.26
-## - commercial_area      -1377.91
-## - arrival              -1349.03
-## - green_area           -1339.03
-## - residential_area     -1274.62
-## - pop_density          -1268.94
-## - size                  -659.33
+##                        Df Sum of Sq    RSS      AIC
+## - fine_dust:hyper_dust  1      0.19 3078.5 -1398.94
+## - mean_snow             1      0.25 3078.6 -1398.87
+## - mean_precipi          1      0.32 3078.6 -1398.77
+## <none>                              3078.3 -1397.21
+## + mean_temp             1      0.13 3078.2 -1395.39
+## + mean_wind             1      0.04 3078.3 -1395.26
+## - commercial_area       1     15.33 3093.6 -1377.91
+## - arrival               1     36.23 3114.5 -1349.03
+## - green_area            1     43.51 3121.8 -1339.03
+## - residential_area      1     90.75 3169.1 -1274.62
+## - pop_density           1     94.96 3173.3 -1268.94
+## - size                  1    579.73 3658.0  -659.33
 ## 
 ## Step:  AIC=-1398.94
 ## log(mean_pop) ~ size + residential_area + commercial_area + green_area + 
 ##     pop_density + arrival + fine_dust + hyper_dust + mean_precipi + 
 ##     mean_snow
 ## 
-##                        Df Sum of Sq    RSS
-## - mean_snow             1      0.22 3078.7
-## - mean_precipi          1      0.33 3078.8
-## <none>                              3078.5
-## - fine_dust             1      1.96 3080.5
-## - hyper_dust            1      2.67 3081.2
-## + fine_dust:hyper_dust  1      0.19 3078.3
-## + mean_temp             1      0.17 3078.3
-## + mean_wind             1      0.02 3078.5
-## - commercial_area       1     15.26 3093.8
-## - arrival               1     36.32 3114.8
-## - green_area            1     43.58 3122.1
-## - residential_area      1     90.83 3169.3
-## - pop_density           1     94.92 3173.4
-## - size                  1    580.32 3658.8
-##                             AIC
-## - mean_snow            -1400.64
-## - mean_precipi         -1400.49
-## <none>                 -1398.94
-## - fine_dust            -1398.21
-## - hyper_dust           -1397.22
-## + fine_dust:hyper_dust -1397.21
-## + mean_temp            -1397.18
-## + mean_wind            -1396.97
-## - commercial_area      -1379.74
-## - arrival              -1350.65
-## - green_area           -1340.66
-## - residential_area     -1276.25
-## - pop_density          -1270.73
-## - size                  -660.41
+##                        Df Sum of Sq    RSS      AIC
+## - mean_snow             1      0.22 3078.7 -1400.64
+## - mean_precipi          1      0.33 3078.8 -1400.49
+## <none>                              3078.5 -1398.94
+## - fine_dust             1      1.96 3080.5 -1398.21
+## - hyper_dust            1      2.67 3081.2 -1397.22
+## + fine_dust:hyper_dust  1      0.19 3078.3 -1397.21
+## + mean_temp             1      0.17 3078.3 -1397.18
+## + mean_wind             1      0.02 3078.5 -1396.97
+## - commercial_area       1     15.26 3093.8 -1379.74
+## - arrival               1     36.32 3114.8 -1350.65
+## - green_area            1     43.58 3122.1 -1340.66
+## - residential_area      1     90.83 3169.3 -1276.25
+## - pop_density           1     94.92 3173.4 -1270.73
+## - size                  1    580.32 3658.8  -660.41
 ## 
 ## Step:  AIC=-1400.64
 ## log(mean_pop) ~ size + residential_area + commercial_area + green_area + 
 ##     pop_density + arrival + fine_dust + hyper_dust + mean_precipi
 ## 
-##                        Df Sum of Sq    RSS
-## - mean_precipi          1      0.28 3079.0
-## <none>                              3078.7
-## - fine_dust             1      2.02 3080.7
-## + mean_snow             1      0.22 3078.5
-## - hyper_dust            1      2.70 3081.4
-## + fine_dust:hyper_dust  1      0.16 3078.6
-## + mean_temp             1      0.09 3078.6
-## + mean_wind             1      0.03 3078.7
-## - commercial_area       1     15.28 3094.0
-## - arrival               1     36.26 3115.0
-## - green_area            1     43.56 3122.3
-## - residential_area      1     90.82 3169.5
-## - pop_density           1     94.92 3173.6
-## - size                  1    580.19 3658.9
-##                             AIC
-## - mean_precipi         -1402.24
-## <none>                 -1400.64
-## - fine_dust            -1399.83
-## + mean_snow            -1398.94
-## - hyper_dust           -1398.88
-## + fine_dust:hyper_dust -1398.87
-## + mean_temp            -1398.76
-## + mean_wind            -1398.68
-## - commercial_area      -1381.41
-## - arrival              -1352.43
-## - green_area           -1342.39
-## - residential_area     -1277.98
-## - pop_density          -1272.43
-## - size                  -662.31
+##                        Df Sum of Sq    RSS      AIC
+## - mean_precipi          1      0.28 3079.0 -1402.24
+## <none>                              3078.7 -1400.64
+## - fine_dust             1      2.02 3080.7 -1399.83
+## + mean_snow             1      0.22 3078.5 -1398.94
+## - hyper_dust            1      2.70 3081.4 -1398.88
+## + fine_dust:hyper_dust  1      0.16 3078.6 -1398.87
+## + mean_temp             1      0.09 3078.6 -1398.76
+## + mean_wind             1      0.03 3078.7 -1398.68
+## - commercial_area       1     15.28 3094.0 -1381.41
+## - arrival               1     36.26 3115.0 -1352.43
+## - green_area            1     43.56 3122.3 -1342.39
+## - residential_area      1     90.82 3169.5 -1277.98
+## - pop_density           1     94.92 3173.6 -1272.43
+## - size                  1    580.19 3658.9  -662.31
 ## 
 ## Step:  AIC=-1402.24
 ## log(mean_pop) ~ size + residential_area + commercial_area + green_area + 
 ##     pop_density + arrival + fine_dust + hyper_dust
 ## 
-##                        Df Sum of Sq    RSS
-## <none>                              3079.0
-## - fine_dust             1      2.18 3081.2
-## + mean_precipi          1      0.28 3078.7
-## + mean_snow             1      0.17 3078.8
-## + fine_dust:hyper_dust  1      0.17 3078.8
-## - hyper_dust            1      2.80 3081.8
-## + mean_temp             1      0.06 3078.9
-## + mean_wind             1      0.02 3079.0
-## - commercial_area       1     15.33 3094.3
-## - arrival               1     36.02 3115.0
-## - green_area            1     43.52 3122.5
-## - residential_area      1     90.81 3169.8
-## - pop_density           1     94.93 3173.9
-## - size                  1    579.98 3659.0
-##                             AIC
-## <none>                 -1402.24
-## - fine_dust            -1401.21
-## + mean_precipi         -1400.64
-## + mean_snow            -1400.49
-## + fine_dust:hyper_dust -1400.48
-## - hyper_dust           -1400.35
-## + mean_temp            -1400.33
-## + mean_wind            -1400.27
-## - commercial_area      -1382.94
-## - arrival              -1354.37
-## - green_area           -1344.06
-## - residential_area     -1279.60
-## - pop_density          -1274.04
-## - size                  -664.22
+##                        Df Sum of Sq    RSS      AIC
+## <none>                              3079.0 -1402.24
+## - fine_dust             1      2.18 3081.2 -1401.21
+## + mean_precipi          1      0.28 3078.7 -1400.64
+## + mean_snow             1      0.17 3078.8 -1400.49
+## + fine_dust:hyper_dust  1      0.17 3078.8 -1400.48
+## - hyper_dust            1      2.80 3081.8 -1400.35
+## + mean_temp             1      0.06 3078.9 -1400.33
+## + mean_wind             1      0.02 3079.0 -1400.27
+## - commercial_area       1     15.33 3094.3 -1382.94
+## - arrival               1     36.02 3115.0 -1354.37
+## - green_area            1     43.52 3122.5 -1344.06
+## - residential_area      1     90.81 3169.8 -1279.60
+## - pop_density           1     94.93 3173.9 -1274.04
+## - size                  1    579.98 3659.0  -664.22
 ```
 
 ```
@@ -504,19 +365,28 @@ step(model, direction = "both")
 ##     data = df)
 ## 
 ## Coefficients:
-##      (Intercept)              size  
-##        9.226e+00         2.723e-06  
-## residential_area   commercial_area  
-##       -2.148e+00         1.367e+00  
-##       green_area       pop_density  
-##       -1.657e+00         5.744e-05  
-##          arrival         fine_dust  
-##       -5.604e-06         1.596e-03  
-##       hyper_dust  
-##       -2.727e-03
+##      (Intercept)              size  residential_area   commercial_area        green_area  
+##        9.226e+00         2.723e-06        -2.148e+00         1.367e+00        -1.657e+00  
+##      pop_density           arrival         fine_dust        hyper_dust  
+##        5.744e-05        -5.604e-06         1.596e-03        -2.727e-03
 ```
 
 아래와 같이 최종 모델 도출
+
+
+$$
+log(Pop) = \beta_1 \cdot Size + \beta_2 \cdot Resid + \beta_3 \cdot Commerce + \beta_4 \cdot Green + \beta_5 \cdot Density + \beta_6 \cdot Arrival + \beta_7 \cdot Fine + \beta_8 \cdot Hyper + \beta_0 + \epsilon
+$$
+
+- Pop      : 주말 백화점 개점 시간(10 ~ 20) 유동 인구의 수
+- Size     : 백화점의 총 면적
+- Resid    : 백화점이 속한 구의 전체 용지 면적 대비 주거지 비율
+- Commerce : 백화점이 속한 구의 전체 용지 면적 대비 상업지 비율
+- Green    : 백화점이 속한 구의 전체 용지 면적 대비 녹지 비율
+- Density  : 백화점이 속한 구의 인구 밀도 
+- Arrival  : 백화점과 가장 가까운 지하철의 일평균 하차 인원 수
+- Fine     : 백화점이 속한 구의 일평균 미세먼지의 양
+- Hyper    : 백화점이 속한 구의 일평균 초미세먼지의 양
 
 
 ```r
@@ -537,29 +407,18 @@ summary(model_step)
 ## -4.1327 -0.4636 -0.0263  0.4953  2.5366 
 ## 
 ## Coefficients:
-##                    Estimate Std. Error t value
-## (Intercept)       9.226e+00  2.237e-01  41.236
-## size              2.723e-06  9.592e-08  28.391
-## residential_area -2.148e+00  1.912e-01 -11.234
-## commercial_area   1.367e+00  2.960e-01   4.616
-## green_area       -1.657e+00  2.131e-01  -7.777
-## pop_density       5.744e-05  5.001e-06  11.486
-## arrival          -5.604e-06  7.921e-07  -7.075
-## fine_dust         1.596e-03  9.164e-04   1.741
-## hyper_dust       -2.727e-03  1.384e-03  -1.971
-##                  Pr(>|t|)    
-## (Intercept)       < 2e-16 ***
-## size              < 2e-16 ***
-## residential_area  < 2e-16 ***
-## commercial_area  4.02e-06 ***
-## green_area       9.25e-15 ***
-## pop_density       < 2e-16 ***
-## arrival          1.73e-12 ***
-## fine_dust          0.0817 .  
-## hyper_dust         0.0488 *  
+##                    Estimate Std. Error t value Pr(>|t|)    
+## (Intercept)       9.226e+00  2.237e-01  41.236  < 2e-16 ***
+## size              2.723e-06  9.592e-08  28.391  < 2e-16 ***
+## residential_area -2.148e+00  1.912e-01 -11.234  < 2e-16 ***
+## commercial_area   1.367e+00  2.960e-01   4.616 4.02e-06 ***
+## green_area       -1.657e+00  2.131e-01  -7.777 9.25e-15 ***
+## pop_density       5.744e-05  5.001e-06  11.486  < 2e-16 ***
+## arrival          -5.604e-06  7.921e-07  -7.075 1.73e-12 ***
+## fine_dust         1.596e-03  9.164e-04   1.741   0.0817 .  
+## hyper_dust       -2.727e-03  1.384e-03  -1.971   0.0488 *  
 ## ---
-## Signif. codes:  
-## 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## Residual standard error: 0.8483 on 4279 degrees of freedom
 ## Multiple R-squared:  0.3461,	Adjusted R-squared:  0.3449 
@@ -570,11 +429,23 @@ summary(model_step)
 
 종속 변수에 log 변환을 실시하였기 때문에 모델은 **독립 변수가 1단위 증가할 때의 종속 변수의 변화량**으로 해석
 
+백화점의 규모가 클수록, 해당 구의 상업지 비율이 높을수록, 인구 밀도가 높을수록 백화점 유동 인구가 증가
+
 미세먼지의 경우, 단위가 1 증가할 때 백화점을 방문한 유동인구는 0.15% 증가하는 반면 초미세먼지의 경우, -0.27% 감소
 
 
 
-![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2-1.png)
+
+```r
+model_stdres = rstandard(model_step)
+
+ggplot(data=as.data.frame(qqnorm( model_stdres , plot=F)), mapping=aes(x=x, y=y)) + 
+    geom_point() + geom_smooth(method="lm", se=FALSE) +
+  labs(x = "Standardized Residuals", y= "Normal Scores") +
+  ggtitle("QQ plot of Residuals")
+```
+
+![plot of chunk hist](figure/hist-1.png)
 
 
 

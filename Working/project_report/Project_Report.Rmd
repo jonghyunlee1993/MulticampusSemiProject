@@ -235,6 +235,21 @@ step(model, direction = "both")
 
 아래와 같이 최종 모델 도출
 
+
+$$
+log(Pop) = \beta_1 \cdot Size + \beta_2 \cdot Resid + \beta_3 \cdot Commerce + \beta_4 \cdot Green + \beta_5 \cdot Density + \beta_6 \cdot Arrival + \beta_7 \cdot Fine + \beta_8 \cdot Hyper + \beta_0 + \epsilon
+$$
+
+- Pop      : 주말 백화점 개점 시간(10 ~ 20) 유동 인구의 수
+- Size     : 백화점의 총 면적
+- Resid    : 백화점이 속한 구의 전체 용지 면적 대비 주거지 비율
+- Commerce : 백화점이 속한 구의 전체 용지 면적 대비 상업지 비율
+- Green    : 백화점이 속한 구의 전체 용지 면적 대비 녹지 비율
+- Density  : 백화점이 속한 구의 인구 밀도 
+- Arrival  : 백화점과 가장 가까운 지하철의 일평균 하차 인원 수
+- Fine     : 백화점이 속한 구의 일평균 미세먼지의 양
+- Hyper    : 백화점이 속한 구의 일평균 초미세먼지의 양
+
 ```{r final_model, echo = T}
 model_step = lm(formula = log(mean_pop) ~ size + residential_area + commercial_area + green_area + pop_density + arrival + fine_dust + hyper_dust, data = df)
 
@@ -245,11 +260,13 @@ summary(model_step)
 
 종속 변수에 log 변환을 실시하였기 때문에 모델은 **독립 변수가 1단위 증가할 때의 종속 변수의 변화량**으로 해석
 
+백화점의 규모가 클수록, 해당 구의 상업지 비율이 높을수록, 인구 밀도가 높을수록 백화점 유동 인구가 증가
+
 미세먼지의 경우, 단위가 1 증가할 때 백화점을 방문한 유동인구는 0.15% 증가하는 반면 초미세먼지의 경우, -0.27% 감소
 
 $~$
 
-```{r}
+```{r hist, echo = T}
 model_stdres = rstandard(model_step)
 
 ggplot(data=as.data.frame(qqnorm( model_stdres , plot=F)), mapping=aes(x=x, y=y)) + 
