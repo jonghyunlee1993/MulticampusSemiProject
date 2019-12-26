@@ -675,14 +675,14 @@ summary {
 <div id="section" class="section level2">
 <h2></h2>
 <pre class="r"><code>summary(df)</code></pre>
-<pre><code>##       date               code              mean_pop          size       
-##  Min.   :20170101   Min.   :1.102e+12   Min.   :   76   Min.   : 18578  
-##  1st Qu.:20170824   1st Qu.:1.111e+12   1st Qu.: 3540   1st Qu.: 70475  
-##  Median :20180666   Median :1.118e+12   Median : 7681   Median : 90163  
-##  Mean   :20180091   Mean   :1.116e+12   Mean   :10442   Mean   :160502  
-##  3rd Qu.:20190308   3rd Qu.:1.123e+12   3rd Qu.:13949   3rd Qu.:147194  
-##  Max.   :20191130   Max.   :1.125e+12   Max.   :54512   Max.   :807686  
-##                                                                         
+<pre><code>##       date                     code         mean_pop          size       
+##  Min.   :20170101   1102052020001: 268   Min.   :   76   Min.   : 18578  
+##  1st Qu.:20170824   1105066011201: 268   1st Qu.: 3540   1st Qu.: 70475  
+##  Median :20180666   1108068010004: 268   Median : 7681   Median : 90163  
+##  Mean   :20180091   1109071040007: 268   Mean   :10442   Mean   :160502  
+##  3rd Qu.:20190308   1111066030001: 268   3rd Qu.:13949   3rd Qu.:147194  
+##  Max.   :20191130   1113075030010: 268   Max.   :54512   Max.   :807686  
+##                     (Other)      :2680                                   
 ##   subway_code     residential_area commercial_area     green_area     
 ##  Min.   : 202.0   Min.   :0.3290   Min.   :0.01144   Min.   :0.00252  
 ##  1st Qu.: 218.2   1st Qu.:0.4957   1st Qu.:0.01532   1st Qu.:0.25739  
@@ -699,29 +699,21 @@ summary {
 ##  3rd Qu.:19883   3rd Qu.: 49964   관악구 : 268   3rd Qu.: 54.00  
 ##  Max.   :26894   Max.   :143134   광진구 : 268   Max.   :243.00  
 ##                                   (Other):1608                   
-##    hyper_dust     fine_dust_grade hyper_dust_grade   IsDustyDay    
-##  Min.   :  1.00   Min.   :1.000   Min.   :1.000    Min.   :0.0000  
-##  1st Qu.: 12.00   1st Qu.:2.000   1st Qu.:2.000    1st Qu.:0.0000  
-##  Median : 20.00   Median :3.000   Median :3.000    Median :0.0000  
-##  Mean   : 24.05   Mean   :3.312   Mean   :3.615    Mean   :0.3962  
-##  3rd Qu.: 31.00   3rd Qu.:5.000   3rd Qu.:5.000    3rd Qu.:1.0000  
-##  Max.   :106.00   Max.   :8.000   Max.   :8.000    Max.   :1.0000  
-##                                                                    
-##    mean_temp        mean_precipi      mean_wind        mean_snow      
-##  Min.   :-10.429   Min.   : 0.000   Min.   :0.7833   Min.   :0.00000  
-##  1st Qu.:  4.749   1st Qu.: 0.000   1st Qu.:1.4698   1st Qu.:0.00000  
-##  Median : 15.992   Median : 0.000   Median :1.8104   Median :0.00000  
-##  Mean   : 13.896   Mean   : 0.394   Mean   :1.9320   Mean   :0.08191  
-##  3rd Qu.: 23.309   3rd Qu.: 0.100   3rd Qu.:2.3021   3rd Qu.:0.00000  
-##  Max.   : 31.550   Max.   :12.136   Max.   :3.8500   Max.   :4.62941  
-##                                                                       
-##    IsRainyDay    
-##  Min.   :0.0000  
-##  1st Qu.:0.0000  
-##  Median :0.0000  
-##  Mean   :0.1045  
-##  3rd Qu.:0.0000  
-##  Max.   :1.0000  
+##    hyper_dust     fine_dust_grade hyper_dust_grade IsDustyDay   mean_temp      
+##  Min.   :  1.00   Min.   :1.000   Min.   :1.000    0:2589     Min.   :-10.429  
+##  1st Qu.: 12.00   1st Qu.:2.000   1st Qu.:2.000    1:1699     1st Qu.:  4.749  
+##  Median : 20.00   Median :3.000   Median :3.000               Median : 15.992  
+##  Mean   : 24.05   Mean   :3.312   Mean   :3.615               Mean   : 13.896  
+##  3rd Qu.: 31.00   3rd Qu.:5.000   3rd Qu.:5.000               3rd Qu.: 23.309  
+##  Max.   :106.00   Max.   :8.000   Max.   :8.000               Max.   : 31.550  
+##                                                                                
+##   mean_precipi      mean_wind        mean_snow       IsRainyDay
+##  Min.   : 0.000   Min.   :0.7833   Min.   :0.00000   0:3840    
+##  1st Qu.: 0.000   1st Qu.:1.4698   1st Qu.:0.00000   1: 448    
+##  Median : 0.000   Median :1.8104   Median :0.00000             
+##  Mean   : 0.394   Mean   :1.9320   Mean   :0.08191             
+##  3rd Qu.: 0.100   3rd Qu.:2.3021   3rd Qu.:0.00000             
+##  Max.   :12.136   Max.   :3.8500   Max.   :4.62941             
 ## </code></pre>
 <p><span class="math inline">\(~\)</span></p>
 <hr />

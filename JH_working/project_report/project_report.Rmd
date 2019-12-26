@@ -4,6 +4,8 @@ subtitle: "기상 조건을 중심으로"
 author: "HAPPY BEAN"
 date: '2019 12 26'
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -168,12 +170,14 @@ $~$
 ' | 상업지 비율(%) | commercial_area
 ' | 녹지 비율(%) | green_area
 ' | 인구 밀도(명/㎢) | pop_density
-' | 일평균 미세먼지(㎍/m³) | fine_dust
-기상 조건 요소 | 일평균 초미세먼지(㎍/m³) | hyper_dust
+기상 조건 요소 | 일평균 미세먼지(㎍/m³) | fine_dust
+' | 일평균 초미세먼지(㎍/m³) | hyper_dust
 ' | 일평균 강수량(mm) | mean_precipitation
 ' | 일평균 기온(°C) | mean_temperature
 ' | 일평균 풍속(m/s) | mean_wind
 ' | 일평균 적설량(cm) | mean_snow
+' | 미세먼지 등급 | fine_dust_grade
+' | 초미세먼지 등급 | hyper_dust_grade
 ' | 미세먼지 많은 날 | IsDustyDay
 ' | 비오는 날 | IsRainyDay
 
@@ -186,6 +190,9 @@ $~$
 ```{r, include = FALSE}
 url = "https://raw.githubusercontent.com/jonghyunlee1993/Multicampus_semi/master/JH_working/proc/final_df_for_linear_model.csv"
 df = read.csv(url, fileEncoding = "UTF-8")[, -1]
+df$code = as.factor(df$code)
+df$IsDustyDay = as.factor(df$IsDustyDay)
+df$IsRainyDay = as.factor(df$IsRainyDay)
 ```
 
 ```{r smmary, echo = T}
