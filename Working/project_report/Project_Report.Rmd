@@ -16,6 +16,8 @@ library(knitr)
 library(ggplot2)
 library(gridExtra)
 library(grid)
+library(car)
+library(nnet)
 ```
 
 $~$
@@ -210,11 +212,11 @@ $~$
 
 ```{r histogram}
 hist1 = ggplot(data = df, aes(x = mean_pop)) + 
-  geom_histogram(bins = 10) +
+  geom_histogram(bins = 10, fill = "lightblue") +
   ggtitle("log 변환 전 일평균 유동 인구")
 
 hist2 = ggplot(data = df, aes(x = log(mean_pop))) +
-  geom_histogram(bins = 10) +
+  geom_histogram(bins = 10, fill = "lightblue") +
   ggtitle("log 변환 후 일평균 유동 인구")
 
 grid.arrange(hist1, hist2, ncol = 2)
@@ -279,9 +281,17 @@ $~$
 
 잔차의 QQ plot을 확인하였을 때, 잔차가 정규성을 잘 따르고 있음
 
+다중공선성 여부를 확인하기 위해 분산 팽창 정도를 확인
+
+```{r vif_function, echo = T}
+vif(model_step)
+```
+
+변수들간의 공선성은 확인되지 않음
+
 $~$
 
-### 모델 유의성 검증
+### 모델 유의성 검증(다항 회귀)
 모델의 유의성을 검증하기 위해 10겹 교차 검증(10-fold cross validation)을 진행
 
 ```{r cross-validation, echo = T}
@@ -333,6 +343,52 @@ $~$
 해당 모델의 MAPE는 7.75%로 상당 부분 예측을 잘 수행하고 있음
 
 $~$
+
+### 모델 유의성 검증(인공 신경망)
+추가적으로 유의 변수들을 이용해 인공 신경망 10겹 교차 검증(10-fold cross validation)을 진행
+
+```{r neural_net, echo = T}
+train_model = function(start, end, mape_res){
+  actuals_preds = NULL
+  
+  test_pop = data.frame(mean_pop = df[start:end, c(3)])
+  train_pop = data.frame(mean_pop = df[-c(start:end), c(3)])
+  
+  test_data = cbind(test_pop, as.data.frame(sapply(df[start:end, c(4, 6:10, 12:13)], scale)))
+  train_data = cbind(train_pop, as.data.frame(sapply(df[-c(start:end), c(4, 6:10, 12:13)], scale)))
+  
+  nnet_model = nnet(log(mean_pop) ~ ., train_data, size = 50, 
+                    linout = T, maxit = 100, trace = F)
+  nnet_pred = predict(nnet_model, test_data)
+  
+  actuals_preds$actuals = log(test_pop$mean_pop)
+  actuals_preds$predicteds = nnet_pred
+  actuals_preds = as.data.frame(actuals_preds)
+  
+  mape <- mean(abs((actuals_preds$predicteds - actuals_preds$actuals))/actuals_preds$actuals) * 100
+  
+  mape_res = rbind(mape_res, as.data.frame(mape))
+  
+  return(mape_res)
+}
+
+data_num = nrow(df) %/% 10
+mape_res = NULL
+
+for (row_idx in 1:10){
+  # cat("iteration: ", row_idx, "\n")
+  
+  start = 1 + (row_idx - 1) * data_num
+  end   = row_idx * data_num
+  
+  mape_res = train_model(start, end, mape_res)
+}
+
+mean_error = mean(mape_res$mape)
+print(mean_error)
+```
+
+이 경우의 오차 역시 2.5%로 상당히 잘 예측하고 있음
 
 ***
 ## 논의
