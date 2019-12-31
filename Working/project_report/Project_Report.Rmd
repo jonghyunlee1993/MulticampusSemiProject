@@ -229,7 +229,7 @@ summary(model_step)
 
 잔차의 QQ plot을 확인하였을 때, 잔차가 정규성을 잘 따르고 있음
 
-```{r hist, echo = T}
+```{r hist, echo = F}
 model_stdres = rstandard(model_step)
 
 ggplot(data=as.data.frame(qqnorm( model_stdres , plot=F)), mapping=aes(x=x, y=y)) + 
@@ -251,12 +251,18 @@ vif(model_step)
 모델의 유의성을 검증하기 위해 10겹 교차 검증(10-fold cross validation)을 진행
 
 ```{r cross-validation, echo = T}
-cal_mape = function(model, test_data, mape_res){
+train_model_lm = function(start, end, mape_res){
+  
+  # train - test split
+  test_data = df[start:end, ]
+  train_data = df[-c(start:end), ]
+  
+  # model fitting
+  model = lm(formula = log(mean_pop) ~ size + residential_area + commercial_area + pop_density + arrival + fine_dust_grade + hyper_dust_grade, data = train_data)
   
   # calculate distance
   distPred <- predict(model, test_data)
   actuals_preds <- data.frame(cbind(actuals = log(test_data$mean_pop), predicteds = distPred))
-  correlation_accuracy <- cor(actuals_preds)
   
   # calculate MAPE 
   mape <- mean(abs((actuals_preds$predicteds - actuals_preds$actuals))/actuals_preds$actuals) * 100
@@ -271,13 +277,8 @@ mape_res = NULL
 for (row_idx in 1:10){
   start = 1 + (row_idx - 1) * data_num
   end   = row_idx * data_num
-  
-  test_data = df[start:end, ]
-  train_data = df[-c(start:end), ]
-  
-  model = lm(formula = log(mean_pop) ~ size + residential_area + commercial_area + pop_density + arrival + fine_dust_grade + hyper_dust_grade, data = train_data)
-  
-  mape_res = cal_mape(model, test_data, mape_res)
+
+  mape_res = train_model_lm(start, end, mape_res)
 }
 
 mean_error_lm = mean(mape_res$mape)
@@ -296,22 +297,20 @@ $$
 추가적으로 유의 변수들을 이용해 인공 신경망 10겹 교차 검증(10-fold cross validation)을 진행
 
 ```{r neural_net, echo = T}
-train_model = function(start, end, mape_res){
-  actuals_preds = NULL
+train_model_nnet = function(start, end, mape_res){
   
   test_pop = data.frame(mean_pop = df[start:end, c(3)])
   train_pop = data.frame(mean_pop = df[-c(start:end), c(3)])
   
-  test_data = cbind(test_pop, as.data.frame(sapply(df[start:end, c(4, 6:10, 12:13)], scale)))
-  train_data = cbind(train_pop, as.data.frame(sapply(df[-c(start:end), c(4, 6:10, 12:13)], scale)))
+  test_data = cbind(test_pop, as.data.frame(sapply(df[start:end, c(4:8, 11:12)], scale)))
+  train_data = cbind(train_pop, as.data.frame(sapply(df[-c(start:end), c(4:8, 11:12)], scale)))
   
   nnet_model = nnet(log(mean_pop) ~ ., train_data, size = 50, 
                     linout = T, maxit = 100, trace = F)
   nnet_pred = predict(nnet_model, test_data)
   
-  actuals_preds$actuals = log(test_pop$mean_pop)
-  actuals_preds$predicteds = nnet_pred
-  actuals_preds = as.data.frame(actuals_preds)
+    actuals_preds <- data.frame(cbind(log(test_data$mean_pop), nnet_pred))
+    names(actuals_preds) = c("actuals", "predicteds")
   
   mape <- mean(abs((actuals_preds$predicteds - actuals_preds$actuals))/actuals_preds$actuals) * 100
   
@@ -324,12 +323,11 @@ data_num = nrow(df) %/% 10
 mape_res = NULL
 
 for (row_idx in 1:10){
-  # cat("iteration: ", row_idx, "\n")
   
   start = 1 + (row_idx - 1) * data_num
   end   = row_idx * data_num
   
-  mape_res = train_model(start, end, mape_res)
+  mape_res = train_model_nnet(start, end, mape_res)
 }
 
 mean_error_nnet = mean(mape_res$mape)
