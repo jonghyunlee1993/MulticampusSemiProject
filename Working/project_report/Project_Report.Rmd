@@ -87,7 +87,7 @@ library(nnet)
 - 최종 분석 대상: 16개 집계 구역 식별
 
 ```{r images, echo=FALSE, out.width = '100%'}
-knitr::include_graphics(rep("./departments.jpeg"),3)
+knitr::include_graphics(rep("./figure/departments.jpeg"),3)
 ```
 
 사명 | 지점명
@@ -227,15 +227,67 @@ summary(model_step)
 
 ## 잔차 분석 및 다중 공선성
 
-잔차의 QQ plot을 확인하였을 때, 잔차가 정규성을 잘 따르고 있음
+잔차의 그래프를 확인하였을 때, 잔차가 정규성을 잘 따르고 있으며 이상치가 없음
 
-```{r hist, echo = F}
-model_stdres = rstandard(model_step)
+```{r residual_plot, echo = F, fig.width=7, fig.height=10}
+# model_stdres = rstandard(model_step)
+# 
+# ggplot(data=as.data.frame(qqnorm( model_stdres , plot=F)), mapping=aes(x=x, y=y)) + 
+#     geom_point() + geom_smooth(method="lm", se=FALSE) +
+#   labs(x = "Standardized Residuals", y= "Normal Scores") +
+#   ggtitle("QQ plot of Residuals")
 
-ggplot(data=as.data.frame(qqnorm( model_stdres , plot=F)), mapping=aes(x=x, y=y)) + 
-    geom_point() + geom_smooth(method="lm", se=FALSE) +
-  labs(x = "Standardized Residuals", y= "Normal Scores") +
-  ggtitle("QQ plot of Residuals")
+plot_residuals <- function(model, size = 1, linewidth = 1){  
+    # extract residuals
+    require(broom)
+    d <- broom::augment(model) 
+
+    # 1: residuals vs. fitted
+    require(ggplot2)
+    p1 = ggplot(data = d, aes(x = .fitted, y = .resid)) + 
+      geom_point(size = size, alpha = 0.4, fill = "skyblue") + 
+      geom_smooth() + 
+      geom_hline(yintercept = 0, linetype = 2) +
+      ggtitle("Residuals vs Fitted Plot") +
+      labs(x = "Fitted Value", y = "Residuals")
+
+    ## 2: qq-plot
+    probs <- c(0.25, 0.75)
+    y <- quantile(d$.std.resid, probs, names = FALSE, na.rm = TRUE)
+    x <- qnorm(probs)
+    slope <- diff(y)/diff(x)
+    intercept <- y[1L] - slope * x[1L]
+    
+    p2 = ggplot(data = d, aes(sample = .std.resid)) + 
+      geom_qq(size = size) + 
+      geom_abline(intercept = intercept, slope = slope, 
+                  linetype = 2, size = linewidth) + 
+      ggtitle("Normal Q-Q Plot") +
+      labs(x = "Theoritical Quantiles", y = "Standarized Residuals")
+
+    ## 3: scale location plot
+    p3= ggplot(data = d, aes(x = .fitted, y = sqrt(abs(.std.resid)))) + 
+      geom_point(size = size, alpha = 0.4, fill = "skyblue") + 
+      geom_smooth() + 
+      geom_hline(yintercept = 1) +
+      ggtitle("Scale Location Plot") +
+      labs(x = "Fitted Values", y = bquote(sqrt("Standarized Residuals")))
+
+    ## 4: Cooks distance plot
+    p4 = ggplot(data = d, aes(.hat, .std.resid)) +
+      geom_vline(size = linewidth, xintercept = 0) +
+      geom_hline(size = linewidth, yintercept = 0) +
+      geom_point(aes(size = .cooksd), alpha = 0.4, fill = "skyblue") + 
+      geom_smooth(se = FALSE) +
+      ggtitle("Residuals vs Leverage Plot") + 
+      labs(x = "Leverage", y = "Standarized Residuals")
+      
+    require(gridExtra)
+    # return(plot(arrangeGrob(p1, p2, p3, p4, nrow = 2)))
+    return(plot(arrangeGrob(p1, p2, p3, p4, nrow = 4)))
+}
+
+plot_residuals(model_step)
 ```
 
 다중공선성 여부를 확인하기 위해 분산 팽창 정도를 확인
